@@ -107,6 +107,7 @@ const languages = [
   { code: 'hi', name: 'Hindi' },
   { code: 'mr', name: 'Marathi' },
   { code: 'es', name: 'Spanish' },
+  { code: 'pa', name: 'Punjabi' },
 ]
 
 export default function Home() {
