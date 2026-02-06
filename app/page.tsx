@@ -24,8 +24,16 @@ import {
   FiAlertOctagon,
   FiCamera,
   FiTrendingUp,
-  FiDollarSign
+  FiDollarSign,
+  FiEye,
+  FiEyeOff,
+  FiAward
 } from 'react-icons/fi'
+import { ShadowBalanceGauge } from '@/components/ShadowBalanceGauge'
+import { EARCalculationDisplay } from '@/components/EARCalculationDisplay'
+import { BenefitTrackerStepper } from '@/components/BenefitTrackerStepper'
+import { MagicWandForm } from '@/components/MagicWandForm'
+import { ShadowBalance, RecurringBill, UserFinancialProfile, EARCalculation, BenefitClaimStatus, PrefilledFormData } from '@/types/advanced-features'
 
 // Agent IDs
 const AGENTS = {
@@ -53,6 +61,7 @@ interface DocumentAnalyzerResult {
   explanation: string
   rbi_violations: string[]
   recommended_action: string
+  ear_calculation?: EARCalculation
 }
 
 interface MatchedScheme {
@@ -69,6 +78,8 @@ interface BenefitsNavigatorResult {
   next_steps: string[]
   required_documents: string[]
   explanation: string
+  claim_status?: BenefitClaimStatus  // Optional: Track application progress
+  prefilled_form?: PrefilledFormData  // Optional: Auto-filled form data for Magic Wand
 }
 
 interface Message {
@@ -110,10 +121,67 @@ export default function Home() {
   const [panicMode, setPanicMode] = useState(false)
   const [showRedAlert, setShowRedAlert] = useState(false)
   const [showLoanCalculator, setShowLoanCalculator] = useState(false)
+  const [showShadowBalance, setShowShadowBalance] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+
+  // Shadow Balance state - demo data (would come from agent in production)
+  const [shadowBalance, setShadowBalance] = useState<ShadowBalance>({
+    bankBalance: 15000,
+    predictedBills14Days: 8500,
+    realBalance: 6500,
+    vampireBills: [
+      {
+        id: '1',
+        name: 'Netflix Premium',
+        amount: 649,
+        frequency: 'monthly',
+        nextDueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+        lastUsedDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
+        isVampire: true,
+        category: 'Entertainment'
+      },
+      {
+        id: '2',
+        name: 'Gym Membership',
+        amount: 1500,
+        frequency: 'monthly',
+        nextDueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        lastUsedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+        isVampire: true,
+        category: 'Health'
+      }
+    ],
+    safeToSpend: 6500,
+    riskLevel: 'caution'
+  })
+
+  // Benefit Claim Tracking state - demo data (would come from agent in production)
+  const [activeClaims, setActiveClaims] = useState<BenefitClaimStatus[]>([
+    {
+      schemeId: 'pm-kisan-001',
+      schemeName: 'PM-Kisan (Farmer Direct Benefit)',
+      status: 'document_collection',
+      appliedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      expectedCompletionDays: 45,
+      currentStep: 2,
+      totalSteps: 5,
+      nextAction: 'Collect your land ownership documents (7/12 extract) and Aadhaar card. Upload them in the next step.',
+      documentsRequired: [
+        'Aadhaar Card',
+        'Land Ownership Records (7/12 Extract)',
+        'Bank Account Passbook',
+        'Passport-size Photo'
+      ],
+      documentsCollected: [
+        'Aadhaar Card',
+        'Bank Account Passbook'
+      ]
+    }
+  ])
+  const [showBenefitTracker, setShowBenefitTracker] = useState(false)
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -452,6 +520,35 @@ export default function Home() {
     }
   }
 
+  const handleCancelVampireBill = (billId: string) => {
+    setShadowBalance(prev => {
+      const canceledBill = prev.vampireBills.find(b => b.id === billId)
+      const updatedVampireBills = prev.vampireBills.filter(b => b.id !== billId)
+
+      // Recalculate predicted bills
+      const billAmount = canceledBill?.amount || 0
+      const newPredictedBills = prev.predictedBills14Days - billAmount
+      const newRealBalance = prev.bankBalance - newPredictedBills
+
+      // Determine new risk level
+      let newRiskLevel: 'safe' | 'caution' | 'danger' = 'safe'
+      if (newRealBalance < 0) {
+        newRiskLevel = 'danger'
+      } else if (newRealBalance < prev.bankBalance * 0.3) {
+        newRiskLevel = 'caution'
+      }
+
+      return {
+        ...prev,
+        vampireBills: updatedVampireBills,
+        predictedBills14Days: newPredictedBills,
+        realBalance: newRealBalance,
+        safeToSpend: newRealBalance,
+        riskLevel: newRiskLevel
+      }
+    })
+  }
+
   const filteredHistory = history.filter(item => {
     if (historyFilter === 'all') return true
     if (historyFilter === 'scams') return item.verdict === 'danger' || item.verdict === 'caution'
@@ -712,18 +809,72 @@ export default function Home() {
                     Loan Calculator
                   </button>
                   <button
+                    onClick={() => setShowShadowBalance(!showShadowBalance)}
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-teal-600 text-teal-700 rounded-full hover:bg-teal-50 transition-colors text-lg font-medium shadow-md"
+                  >
+                    {showShadowBalance ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                    Shadow Balance
+                  </button>
+                  <button
                     onClick={() => handleQuickAction('document')}
                     className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-orange-600 text-orange-700 rounded-full hover:bg-orange-50 transition-colors text-lg font-medium shadow-md"
                   >
                     <FiFileText size={20} />
                     Upload Document
                   </button>
+                  <button
+                    onClick={() => setShowBenefitTracker(!showBenefitTracker)}
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-700 rounded-full hover:bg-indigo-50 transition-colors text-lg font-medium shadow-md"
+                  >
+                    <FiAward size={20} />
+                    Track Applications
+                  </button>
                 </div>
+
+                {/* Shadow Balance Widget */}
+                {showShadowBalance && (
+                  <div className="mt-8 max-w-3xl mx-auto">
+                    <ShadowBalanceGauge
+                      shadowBalance={shadowBalance}
+                      onCancelBill={handleCancelVampireBill}
+                    />
+                  </div>
+                )}
+
+                {/* Benefit Tracker Widget */}
+                {showBenefitTracker && activeClaims.length > 0 && (
+                  <div className="mt-8 max-w-3xl mx-auto space-y-4">
+                    <h3 className="text-2xl font-bold text-gray-800">Your Active Applications</h3>
+                    {activeClaims.map((claim, idx) => (
+                      <BenefitTrackerStepper key={claim.schemeId} claimStatus={claim} />
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
-              messages.map(message => (
-                <ChatMessage key={message.id} message={message} />
-              ))
+              <>
+                {/* Shadow Balance in Chat View */}
+                {showShadowBalance && (
+                  <ShadowBalanceGauge
+                    shadowBalance={shadowBalance}
+                    onCancelBill={handleCancelVampireBill}
+                  />
+                )}
+
+                {/* Benefit Tracker in Chat View */}
+                {showBenefitTracker && activeClaims.length > 0 && (
+                  <div className="space-y-4 mb-6">
+                    <h3 className="text-2xl font-bold text-gray-800">Your Active Applications</h3>
+                    {activeClaims.map((claim) => (
+                      <BenefitTrackerStepper key={claim.schemeId} claimStatus={claim} />
+                    ))}
+                  </div>
+                )}
+
+                {messages.map(message => (
+                  <ChatMessage key={message.id} message={message} />
+                ))}
+              </>
             )}
 
             {loading && (
@@ -949,6 +1100,11 @@ function VerdictCard({
     }
     const riskLevel = docResponse.risk_level || 'Yellow'
 
+    // If EAR calculation is provided, show the dedicated EAR component
+    if (docResponse.ear_calculation) {
+      return <EARCalculationDisplay calculation={docResponse.ear_calculation} />
+    }
+
     return (
       <Card className={`${colorClasses[riskLevel]} border-l-4 shadow-lg`}>
         <CardHeader>
@@ -1044,6 +1200,11 @@ function VerdictCard({
 
   if (responseType === 'benefits') {
     const benefitsResponse = response as BenefitsNavigatorResult
+
+    // If claim status tracking is provided, show the Benefit Tracker instead
+    if (benefitsResponse.claim_status) {
+      return <BenefitTrackerStepper claimStatus={benefitsResponse.claim_status} />
+    }
 
     return (
       <Card className="bg-blue-50 border-l-4 border-blue-500 shadow-lg">
