@@ -1,0 +1,75 @@
+{
+  "agent_name": "Document Analyzer Agent",
+  "agent_id": "69857fadb90162af337b1db1",
+  "agent_purpose": "loan_document_analysis",
+  "description": "Calculates true Effective Interest Rate from loan documents and identifies RBI compliance issues",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "stated_interest_rate": "string",
+      "effective_interest_rate": "string",
+      "hidden_charges": [
+        "string"
+      ],
+      "compliance_status": "string",
+      "risk_level": "string",
+      "explanation": "string",
+      "rbi_violations": [
+        "string"
+      ],
+      "recommended_action": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "stated_interest_rate": "2% monthly",
+      "effective_interest_rate": "approximately 28.08% annually",
+      "hidden_charges": [
+        "\u20b9500 processing fee",
+        "\u20b9200 documentation charge"
+      ],
+      "compliance_status": "non_compliant",
+      "risk_level": "Red",
+      "explanation": "The loan states a 2% monthly interest rate, which translates to a 24% annual interest rate. However, when including the \u20b9500 processing fee and \u20b9200 documentation charge, the Effective Interest Rate (EIR) increases to approximately 28.08% annually. This rate remains under the RBI's maximum of 36% annual rate for NBFCs, but the upfront charges could still indicate excessive fees.",
+      "rbi_violations": [
+        "No direct RBI violations, but high fees"
+      ],
+      "recommended_action": "Consider consulting with a financial advisor to evaluate better loan options or negotiate lower fees."
+    },
+    "metadata": {
+      "agent_name": "Document Analyzer Agent",
+      "timestamp": "2023-10-22T14:30:00Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T05:46:57.343027",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "stated_interest_rate": "2% monthly",
+      "effective_interest_rate": "approximately 28.08% annually",
+      "hidden_charges": [
+        "\u20b9500 processing fee",
+        "\u20b9200 documentation charge"
+      ],
+      "compliance_status": "non_compliant",
+      "risk_level": "Red",
+      "explanation": "The loan states a 2% monthly interest rate, which translates to a 24% annual interest rate. However, when including the \u20b9500 processing fee and \u20b9200 documentation charge, the Effective Interest Rate (EIR) increases to approximately 28.08% annually. This rate remains under the RBI's maximum of 36% annual rate for NBFCs, but the upfront charges could still indicate excessive fees.",
+      "rbi_violations": [
+        "No direct RBI violations, but high fees"
+      ],
+      "recommended_action": "Consider consulting with a financial advisor to evaluate better loan options or negotiate lower fees."
+    },
+    "metadata": {
+      "agent_name": "Document Analyzer Agent",
+      "timestamp": "2023-10-22T14:30:00Z"
+    }
+  },
+  "test_passed": true
+}

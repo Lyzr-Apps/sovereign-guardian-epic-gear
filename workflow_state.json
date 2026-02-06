@@ -1,0 +1,69 @@
+{
+  "workflow_name": "Sovereign Financial Guardian",
+  "created_at": "2026-02-06T00:00:00Z",
+  "agents": {
+    "guardian_coordinator": {
+      "agent_id": "69857fdbf5dba64760ed7ec0",
+      "name": "Guardian Coordinator",
+      "type": "manager",
+      "role": "Financial Safety Coordinator",
+      "model": "gpt-4o",
+      "managed_agents": [
+        "69857f9a0ee88347863f06f1",
+        "69857fadb90162af337b1db1",
+        "69857fc5a051b79c1135a033"
+      ]
+    },
+    "phish_detector": {
+      "agent_id": "69857f9a0ee88347863f06f1",
+      "name": "Phish Detector Agent",
+      "type": "sub_agent",
+      "role": "SMS and Link Security Analyst",
+      "model": "gpt-4o",
+      "knowledge_base": null
+    },
+    "document_analyzer": {
+      "agent_id": "69857fadb90162af337b1db1",
+      "name": "Document Analyzer Agent",
+      "type": "sub_agent",
+      "role": "Loan Document Auditor",
+      "model": "gpt-4o",
+      "knowledge_base": {
+        "rag_id": "69857f8cde7de278e55d283b",
+        "rag_name": "rbiguidelinesc7bl",
+        "collection_name": "RBI_Guidelines"
+      }
+    },
+    "benefits_navigator": {
+      "agent_id": "69857fc5a051b79c1135a033",
+      "name": "Benefits Navigator Agent",
+      "type": "sub_agent",
+      "role": "Government Scheme Matching Specialist",
+      "model": "gpt-4o",
+      "knowledge_base": {
+        "rag_id": "69857f8cde7de278e55d283d",
+        "rag_name": "governmentschemesfzzw",
+        "collection_name": "Government_Schemes"
+      }
+    }
+  },
+  "knowledge_bases": {
+    "RBI_Guidelines": {
+      "rag_id": "69857f8cde7de278e55d283b",
+      "rag_name": "rbiguidelinesc7bl",
+      "description": "RBI lending guidelines, interest rate caps, loan document requirements, and financial regulations for India",
+      "linked_to_agent": "document_analyzer"
+    },
+    "Government_Schemes": {
+      "rag_id": "69857f8cde7de278e55d283d",
+      "rag_name": "governmentschemesfzzw",
+      "description": "Indian government financial schemes including PM-Kisan, Pradhan Mantri Jan Dhan Yojana, subsidy programs, farmer benefits, low-income worker support schemes",
+      "linked_to_agent": "benefits_navigator"
+    }
+  },
+  "workflow_structure": {
+    "entry_point": "guardian_coordinator",
+    "routing_pattern": "manager_to_subagents",
+    "output_format": "unified_safety_verdict"
+  }
+}

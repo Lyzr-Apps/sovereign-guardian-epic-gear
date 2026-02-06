@@ -1,0 +1,29 @@
+{
+  "agent_name": "Phish Detector Agent",
+  "agent_id": "69857f9a0ee88347863f06f1",
+  "test_message": "Urgent! Your KYC is expiring. Update now: bit.ly/kyc-update or account will be blocked. Call 9876543210 immediately.",
+  "expected_purpose": "Scam detection for SMS and links",
+  "timestamp": "2026-02-06T05:46:46.907731",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "risk_level": "Red",
+      "threat_type": "phishing",
+      "indicators_found": [
+        "urgent language",
+        "suspicious link",
+        "fake authority threat (account will be blocked)",
+        "immediate action call"
+      ],
+      "explanation": "The message uses urgent language and the threat of an account block to pressure for immediate action. The shortened URL and request to update KYC through an unverified link are common phishing tactics.",
+      "recommended_action": "Do not click on the link or call the number. Contact your service provider using official contact details to verify if any action is needed."
+    },
+    "metadata": {
+      "agent_name": "Phish Detector Agent",
+      "timestamp": "2023-11-01T12:00:00Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"risk_level\": \"Red\",\n    \"threat_type\": \"phishing\",\n    \"indicators_found\": [\n      \"urgent language\",\n      \"suspicious link\",\n      \"fake authority threat (account will be blocked)\",\n      \"immediate action call\"\n    ],\n    \"explanation\": \"The message uses urgent language and the threat of an account block to pressure for immediate action. The shortened URL and request to update KYC through an unverified link are common phishing tactics.\",\n    \"recommended_action\": \"Do not click on the link or call the number. Contact your service provider using official contact details to verify if any action is needed.\"\n  },\n  \"metadata\": {\n    \"agent_name\": \"Phish Detector Agent\",\n    \"timestamp\": \"2023-11-01T12:00:00Z\"\n  }\n}"
+}

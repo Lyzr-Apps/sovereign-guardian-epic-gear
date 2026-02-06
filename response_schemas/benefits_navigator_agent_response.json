@@ -1,0 +1,108 @@
+{
+  "agent_name": "Benefits Navigator Agent",
+  "agent_id": "69857fc5a051b79c1135a033",
+  "agent_purpose": "government_scheme_matching",
+  "description": "Matches user profiles with government financial schemes and explains eligibility and benefits",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "matched_schemes": [
+        {
+          "scheme_name": "string",
+          "benefit_amount": "string",
+          "eligibility_match": "string",
+          "application_difficulty": "string",
+          "priority": "string"
+        }
+      ],
+      "total_potential_benefits": "string",
+      "next_steps": [
+        "string"
+      ],
+      "required_documents": [
+        "string"
+      ],
+      "explanation": "string"
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "matched_schemes": [
+        {
+          "scheme_name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "benefit_amount": "\u20b96,000 per year in three equal installments",
+          "eligibility_match": "90% match with user profile",
+          "application_difficulty": "easy",
+          "priority": "high"
+        },
+        {
+          "scheme_name": "Maharashtra Farm Loan Waiver Scheme",
+          "benefit_amount": "waiver of agricultural loans up to \u20b91,50,000",
+          "eligibility_match": "75% match with user profile",
+          "application_difficulty": "moderate",
+          "priority": "medium"
+        }
+      ],
+      "total_potential_benefits": "estimated total benefits of up to \u20b91,56,000, based on loan waiver eligibility",
+      "next_steps": [
+        "Visit your nearest Common Service Center (CSC) or agricultural office for PM-KISAN application.",
+        "Check eligibility and documents required for the Maharashtra Farm Loan Waiver Scheme at your local bank."
+      ],
+      "required_documents": [
+        "Aadhaar card",
+        "Land ownership documents",
+        "Bank account passbook"
+      ],
+      "explanation": "As a small farmer in Maharashtra with an annual income of \u20b980,000 and 2 acres of land, you are eligible for financial benefits like direct income support and potential loan waivers. These schemes are designed to provide income support and reduce financial burdens on farmers."
+    },
+    "metadata": {
+      "agent_name": "Benefits Navigator Agent",
+      "timestamp": "2023-11-23T11:19:54Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T05:47:08.341233",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "matched_schemes": [
+        {
+          "scheme_name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "benefit_amount": "\u20b96,000 per year in three equal installments",
+          "eligibility_match": "90% match with user profile",
+          "application_difficulty": "easy",
+          "priority": "high"
+        },
+        {
+          "scheme_name": "Maharashtra Farm Loan Waiver Scheme",
+          "benefit_amount": "waiver of agricultural loans up to \u20b91,50,000",
+          "eligibility_match": "75% match with user profile",
+          "application_difficulty": "moderate",
+          "priority": "medium"
+        }
+      ],
+      "total_potential_benefits": "estimated total benefits of up to \u20b91,56,000, based on loan waiver eligibility",
+      "next_steps": [
+        "Visit your nearest Common Service Center (CSC) or agricultural office for PM-KISAN application.",
+        "Check eligibility and documents required for the Maharashtra Farm Loan Waiver Scheme at your local bank."
+      ],
+      "required_documents": [
+        "Aadhaar card",
+        "Land ownership documents",
+        "Bank account passbook"
+      ],
+      "explanation": "As a small farmer in Maharashtra with an annual income of \u20b980,000 and 2 acres of land, you are eligible for financial benefits like direct income support and potential loan waivers. These schemes are designed to provide income support and reduce financial burdens on farmers."
+    },
+    "metadata": {
+      "agent_name": "Benefits Navigator Agent",
+      "timestamp": "2023-11-23T11:19:54Z"
+    }
+  },
+  "test_passed": true
+}

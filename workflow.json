@@ -1,0 +1,165 @@
+{
+  "workflow_name": "Sovereign Financial Guardian",
+  "description": "Multi-agent system for financial safety, scam detection, loan document analysis, and government benefit matching",
+  "version": "1.0.0",
+  "created_at": "2026-02-06",
+  "agents": [
+    {
+      "id": "guardian_coordinator",
+      "agent_id": "69857fdbf5dba64760ed7ec0",
+      "name": "Guardian Coordinator",
+      "type": "manager",
+      "role": "Financial Safety Coordinator",
+      "description": "Classifies user intent, routes to specialized sub-agents, and synthesizes responses into Red/Yellow/Green safety verdicts",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.3,
+      "top_p": 1,
+      "managed_agents": [
+        "69857f9a0ee88347863f06f1",
+        "69857fadb90162af337b1db1",
+        "69857fc5a051b79c1135a033"
+      ],
+      "response_schema": "response_schemas/guardian_coordinator_response.json"
+    },
+    {
+      "id": "phish_detector",
+      "agent_id": "69857f9a0ee88347863f06f1",
+      "name": "Phish Detector Agent",
+      "type": "sub_agent",
+      "role": "SMS and Link Security Analyst",
+      "description": "Analyzes SMS messages, URLs, and suspicious texts for phishing patterns, predatory lending, and data harvesting",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.2,
+      "top_p": 1,
+      "response_schema": "response_schemas/phish_detector_agent_response.json"
+    },
+    {
+      "id": "document_analyzer",
+      "agent_id": "69857fadb90162af337b1db1",
+      "name": "Document Analyzer Agent",
+      "type": "sub_agent",
+      "role": "Loan Document Auditor",
+      "description": "Calculates true Effective Interest Rate, identifies hidden charges, and compares against RBI guidelines",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.2,
+      "top_p": 1,
+      "knowledge_base": {
+        "rag_id": "69857f8cde7de278e55d283b",
+        "rag_name": "rbiguidelinesc7bl",
+        "collection_name": "RBI_Guidelines"
+      },
+      "response_schema": "response_schemas/document_analyzer_agent_response.json"
+    },
+    {
+      "id": "benefits_navigator",
+      "agent_id": "69857fc5a051b79c1135a033",
+      "name": "Benefits Navigator Agent",
+      "type": "sub_agent",
+      "role": "Government Scheme Matching Specialist",
+      "description": "Matches user profiles against government scheme eligibility criteria and explains benefits simply",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.4,
+      "top_p": 1,
+      "knowledge_base": {
+        "rag_id": "69857f8cde7de278e55d283d",
+        "rag_name": "governmentschemesfzzw",
+        "collection_name": "Government_Schemes"
+      },
+      "response_schema": "response_schemas/benefits_navigator_agent_response.json"
+    }
+  ],
+  "knowledge_bases": [
+    {
+      "name": "RBI_Guidelines",
+      "rag_id": "69857f8cde7de278e55d283b",
+      "rag_name": "rbiguidelinesc7bl",
+      "description": "RBI lending guidelines, interest rate caps, loan document requirements, and financial regulations for India",
+      "linked_to": "document_analyzer"
+    },
+    {
+      "name": "Government_Schemes",
+      "rag_id": "69857f8cde7de278e55d283d",
+      "rag_name": "governmentschemesfzzw",
+      "description": "Indian government financial schemes including PM-Kisan, Pradhan Mantri Jan Dhan Yojana, subsidy programs, farmer benefits, low-income worker support schemes",
+      "linked_to": "benefits_navigator"
+    }
+  ],
+  "workflow_structure": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "Input",
+        "label": "User Query",
+        "nodeCategory": "input"
+      },
+      {
+        "id": "guardian_coordinator",
+        "type": "Agent",
+        "label": "Guardian Coordinator",
+        "nodeCategory": "agent",
+        "agent_id": "69857fdbf5dba64760ed7ec0"
+      },
+      {
+        "id": "phish_detector",
+        "type": "Agent",
+        "label": "Phish Detector Agent",
+        "nodeCategory": "agent",
+        "agent_id": "69857f9a0ee88347863f06f1"
+      },
+      {
+        "id": "document_analyzer",
+        "type": "Agent",
+        "label": "Document Analyzer Agent",
+        "nodeCategory": "agent",
+        "agent_id": "69857fadb90162af337b1db1"
+      },
+      {
+        "id": "benefits_navigator",
+        "type": "Agent",
+        "label": "Benefits Navigator Agent",
+        "nodeCategory": "agent",
+        "agent_id": "69857fc5a051b79c1135a033"
+      },
+      {
+        "id": "output_node",
+        "type": "Output",
+        "label": "Safety Verdict",
+        "nodeCategory": "end"
+      }
+    ],
+    "edges": [
+      {
+        "source": "input_node",
+        "target": "guardian_coordinator"
+      },
+      {
+        "source": "guardian_coordinator",
+        "target": "phish_detector"
+      },
+      {
+        "source": "guardian_coordinator",
+        "target": "document_analyzer"
+      },
+      {
+        "source": "guardian_coordinator",
+        "target": "benefits_navigator"
+      },
+      {
+        "source": "phish_detector",
+        "target": "output_node"
+      },
+      {
+        "source": "document_analyzer",
+        "target": "output_node"
+      },
+      {
+        "source": "benefits_navigator",
+        "target": "output_node"
+      }
+    ]
+  }
+}

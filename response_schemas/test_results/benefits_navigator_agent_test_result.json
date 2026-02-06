@@ -1,0 +1,46 @@
+{
+  "agent_name": "Benefits Navigator Agent",
+  "agent_id": "69857fc5a051b79c1135a033",
+  "test_message": "I am a small farmer from Maharashtra with 2 acres of land. My annual income is around \u20b980,000. What government schemes can help me?",
+  "expected_purpose": "Government scheme matching",
+  "timestamp": "2026-02-06T05:47:08.340773",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "matched_schemes": [
+        {
+          "scheme_name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+          "benefit_amount": "\u20b96,000 per year in three equal installments",
+          "eligibility_match": "90% match with user profile",
+          "application_difficulty": "easy",
+          "priority": "high"
+        },
+        {
+          "scheme_name": "Maharashtra Farm Loan Waiver Scheme",
+          "benefit_amount": "waiver of agricultural loans up to \u20b91,50,000",
+          "eligibility_match": "75% match with user profile",
+          "application_difficulty": "moderate",
+          "priority": "medium"
+        }
+      ],
+      "total_potential_benefits": "estimated total benefits of up to \u20b91,56,000, based on loan waiver eligibility",
+      "next_steps": [
+        "Visit your nearest Common Service Center (CSC) or agricultural office for PM-KISAN application.",
+        "Check eligibility and documents required for the Maharashtra Farm Loan Waiver Scheme at your local bank."
+      ],
+      "required_documents": [
+        "Aadhaar card",
+        "Land ownership documents",
+        "Bank account passbook"
+      ],
+      "explanation": "As a small farmer in Maharashtra with an annual income of \u20b980,000 and 2 acres of land, you are eligible for financial benefits like direct income support and potential loan waivers. These schemes are designed to provide income support and reduce financial burdens on farmers."
+    },
+    "metadata": {
+      "agent_name": "Benefits Navigator Agent",
+      "timestamp": "2023-11-23T11:19:54Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"matched_schemes\": [\n      {\n        \"scheme_name\": \"Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)\",\n        \"benefit_amount\": \"\u20b96,000 per year in three equal installments\",\n        \"eligibility_match\": \"90% match with user profile\",\n        \"application_difficulty\": \"easy\",\n        \"priority\": \"high\"\n      },\n      {\n        \"scheme_name\": \"Maharashtra Farm Loan Waiver Scheme\",\n        \"benefit_amount\": \"waiver of agricultural loans up to \u20b91,50,000\",\n        \"eligibility_match\": \"75% match with user profile\",\n        \"application_difficulty\": \"moderate\",\n        \"priority\": \"medium\"\n      }\n    ],\n    \"total_potential_benefits\": \"estimated total benefits of up to \u20b91,56,000, based on loan waiver eligibility\",\n    \"next_steps\": [\n      \"Visit your nearest Common Service Center (CSC) or agricultural office for PM-KISAN application.\",\n      \"Check eligibility and documents required for the Maharashtra Farm Loan Waiver Scheme at your local bank.\"\n    ],\n    \"required_documents\": [\n      \"Aadhaar card\",\n      \"Land ownership documents\",\n      \"Bank account passbook\"\n    ],\n    \"explanation\": \"As a small farmer in Maharashtra with an annual income of \u20b980,000 and 2 acres of land, you are eligible for financial benefits like direct income support and potential loan waivers. These schemes are designed to provide income support and reduce financial burdens on farmers.\"\n  },\n  \"metadata\": {\n    \"agent_name\": \"Benefits Navigator Agent\",\n    \"timestamp\": \"2023-11-23T11:19:54Z\"\n  }\n}"
+}
