@@ -70,10 +70,10 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
 
   // Determine overall status color
   const getStatusColor = () => {
-    if (isRejected) return { bg: 'bg-red-50', border: 'border-red-500', text: 'text-red-700', progress: 'from-red-400 to-red-600' }
-    if (claimStatus.status === 'approved') return { bg: 'bg-green-50', border: 'border-green-500', text: 'text-green-700', progress: 'from-green-400 to-green-600' }
-    if (claimStatus.status === 'submitted') return { bg: 'bg-blue-50', border: 'border-blue-500', text: 'text-blue-700', progress: 'from-blue-400 to-blue-600' }
-    return { bg: 'bg-amber-50', border: 'border-amber-500', text: 'text-amber-700', progress: 'from-amber-400 to-amber-600' }
+    if (isRejected) return { bg: 'bg-red-200', border: 'border-red-500', text: 'text-black', progress: 'bg-red-500' }
+    if (claimStatus.status === 'approved') return { bg: 'bg-green-200', border: 'border-green-500', text: 'text-black', progress: 'bg-green-500' }
+    if (claimStatus.status === 'submitted') return { bg: 'bg-blue-200', border: 'border-blue-500', text: 'text-black', progress: 'bg-blue-500' }
+    return { bg: 'bg-amber-200', border: 'border-amber-500', text: 'text-black', progress: 'bg-amber-500' }
   }
 
   const statusColor = getStatusColor()
@@ -100,14 +100,14 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
   }
 
   return (
-    <Card className={`${statusColor.bg} border-l-4 ${statusColor.border} shadow-lg`}>
+    <Card className={`${statusColor.bg}`}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3 flex-1">
-            <FiAward size={32} className={statusColor.text} />
+            <FiAward size={32} className="text-black" />
             <div className="flex-1">
-              <CardTitle className="text-2xl font-bold">{claimStatus.schemeName}</CardTitle>
-              <p className="text-sm text-gray-600 mt-1">
+              <CardTitle className="text-2xl font-bold text-black">{claimStatus.schemeName}</CardTitle>
+              <p className="text-sm font-bold text-black mt-1">
                 {isRejected ? 'Application Rejected' :
                  claimStatus.status === 'approved' ? 'Benefit Approved!' :
                  claimStatus.status === 'submitted' ? 'Under Review' :
@@ -117,7 +117,7 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
           </div>
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-gray-600 hover:text-gray-800"
+            className="text-black hover:scale-110 transition-transform"
           >
             {expanded ? <FiChevronUp size={24} /> : <FiChevronDown size={24} />}
           </button>
@@ -127,40 +127,40 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
       {expanded && (
         <CardContent className="space-y-6">
           {/* Progress Overview */}
-          <div className="bg-white bg-opacity-70 p-4 rounded-lg">
+          <div className="bg-white p-4 border-4 border-black">
             <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-sm text-gray-600">Current Step</p>
-                <p className="text-lg font-bold text-gray-800">
+                <p className="text-sm font-bold text-black">Current Step</p>
+                <p className="text-lg font-bold text-black">
                   {isRejected ? 'Rejected' : `${claimStatus.currentStep} of ${claimStatus.totalSteps}`}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-gray-600">Expected Completion</p>
-                <p className="text-lg font-bold text-gray-800">
+                <p className="text-sm font-bold text-black">Expected Completion</p>
+                <p className="text-lg font-bold text-black">
                   {isRejected ? 'N/A' : `${claimStatus.expectedCompletionDays} days`}
                 </p>
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+            <div className="relative h-3 bg-gray-200 border-2 border-black overflow-hidden">
               <div
-                className={`absolute h-full bg-gradient-to-r ${statusColor.progress} transition-all duration-1000`}
+                className={`absolute h-full ${statusColor.progress} transition-all duration-1000`}
                 style={{ width: `${isRejected ? 0 : progressPercentage}%` }}
               />
             </div>
 
             {claimStatus.appliedDate && (
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs font-bold text-black mt-2">
                 Applied on: {formatDate(claimStatus.appliedDate)}
               </p>
             )}
           </div>
 
           {/* Step Tracker */}
-          <div className="bg-white bg-opacity-70 p-6 rounded-lg">
-            <h4 className="font-semibold text-lg mb-4">Application Progress</h4>
+          <div className="bg-white p-6 border-4 border-black">
+            <h4 className="font-bold text-lg mb-4 text-black">Application Progress</h4>
 
             <div className="space-y-6">
               {steps.map((step, index) => {
@@ -172,7 +172,7 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
                   <div key={step.id} className="flex items-start gap-4">
                     {/* Icon with connector line */}
                     <div className="flex flex-col items-center">
-                      <div className={`rounded-full p-2 ${
+                      <div className={`p-2 border-4 border-black ${
                         completed ? 'bg-green-500' :
                         current ? 'bg-amber-500 animate-pulse' :
                         'bg-gray-300'
@@ -192,20 +192,20 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
 
                     {/* Step content */}
                     <div className="flex-1 pb-4">
-                      <h5 className={`font-semibold text-base ${
-                        current ? 'text-amber-700' :
-                        completed ? 'text-green-700' :
-                        'text-gray-500'
+                      <h5 className={`font-bold text-base ${
+                        current ? 'text-black' :
+                        completed ? 'text-black' :
+                        'text-black'
                       }`}>
                         {step.label}
                       </h5>
-                      <p className="text-sm text-gray-600 mt-1">{step.description}</p>
+                      <p className="text-sm font-medium text-black mt-1">{step.description}</p>
 
                       {/* Show current step indicator */}
                       {current && (
-                        <div className="mt-2 flex items-center gap-2 text-amber-600">
+                        <div className="mt-2 flex items-center gap-2 text-black">
                           <FiAlertCircle size={16} />
-                          <span className="text-sm font-semibold">Current Step</span>
+                          <span className="text-sm font-bold">Current Step</span>
                         </div>
                       )}
                     </div>
@@ -217,12 +217,12 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
 
           {/* Next Action Card */}
           {!isRejected && claimStatus.status !== 'approved' && (
-            <div className="bg-amber-50 p-4 rounded-lg border-2 border-amber-300">
-              <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <FiAlertCircle className="text-amber-600" size={20} />
-                Next Action Required
+            <div className="bg-amber-200 p-4 border-4 border-black">
+              <h4 className="font-bold text-lg mb-2 flex items-center gap-2">
+                <FiAlertCircle className="text-black" size={20} />
+                <span className="text-black">Next Action Required</span>
               </h4>
-              <p className="text-base text-gray-800 leading-relaxed mb-4">
+              <p className="text-base text-black leading-relaxed mb-4 font-medium">
                 {claimStatus.nextAction}
               </p>
 
@@ -230,7 +230,7 @@ export function BenefitTrackerStepper({ claimStatus, onActionClick }: BenefitTra
                 <Button
                   onClick={() => setShowDocuments(!showDocuments)}
                   variant="outline"
-                  className="w-full text-base"
+                  className="w-full text-base font-bold border-4 border-black"
                 >
                   {showDocuments ? 'Hide' : 'Show'} Document Checklist
                 </Button>

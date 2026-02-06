@@ -637,7 +637,7 @@ export default function Home() {
   })
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-amber-50 via-cream-50 to-green-50 relative">
+    <div className="flex h-screen bg-yellow-100 relative">
       {/* Vigilante Shield */}
       <VigilanteShield
         isActive={vigilanteActive}
@@ -660,25 +660,25 @@ export default function Home() {
       {/* Loan Transparency Calculator Modal */}
       {showLoanCalculator && (
         <div className="fixed inset-0 z-[90] bg-black bg-opacity-50 flex items-center justify-center" onClick={() => setShowLoanCalculator(false)}>
-          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white border-4 border-black p-8 max-w-2xl w-full mx-4 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <FiDollarSign size={32} className="text-purple-600" />
-                <h2 className="text-3xl font-bold text-gray-800">Loan Transparency Calculator</h2>
+                <h2 className="text-3xl font-bold text-black">Loan Transparency Calculator</h2>
               </div>
-              <button onClick={() => setShowLoanCalculator(false)} className="text-gray-500 hover:text-gray-700">
+              <button onClick={() => setShowLoanCalculator(false)} className="text-black hover:scale-110 transition-transform">
                 <FiX size={28} />
               </button>
             </div>
 
-            <p className="text-xl text-gray-600 mb-6">
+            <p className="text-xl text-black font-medium mb-6">
               Upload a screenshot of a loan app or offer to see the true cost with all hidden fees exposed.
             </p>
 
             <div className="space-y-4">
               <button
                 onClick={() => cameraInputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-3 px-6 py-6 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors text-xl font-semibold"
+                className="w-full flex items-center justify-center gap-3 px-6 py-6 bg-purple-400 text-black border-4 border-black hover:bg-purple-300 transition-all text-xl font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
               >
                 <FiCamera size={28} />
                 Take Screenshot or Upload Image
@@ -693,12 +693,12 @@ export default function Home() {
                 className="hidden"
               />
 
-              <div className="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
-                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
-                  <FiTrendingUp className="text-purple-600" />
+              <div className="bg-purple-200 p-6 border-4 border-black">
+                <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
+                  <FiTrendingUp className="text-black" />
                   What we analyze:
                 </h3>
-                <ul className="space-y-2 text-lg text-gray-700">
+                <ul className="space-y-2 text-lg text-black font-medium">
                   <li>• Stated vs. Effective Interest Rate</li>
                   <li>• Hidden processing fees and charges</li>
                   <li>• Compliance with RBI guidelines</li>
@@ -710,14 +710,14 @@ export default function Home() {
         </div>
       )}
 
-      {/* Panic Button FAB */}
+      {/* Panic Button FAB - Neobrutalism */}
       <button
         onClick={handlePanicButton}
         disabled={panicMode}
-        className={`fixed bottom-8 right-8 z-50 w-20 h-20 rounded-full shadow-2xl flex items-center justify-center transition-all ${
+        className={`fixed bottom-8 right-8 z-50 w-20 h-20 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all ${
           panicMode
             ? 'bg-red-700 animate-pulse scale-110'
-            : 'bg-red-600 hover:bg-red-700 hover:scale-110'
+            : 'bg-red-600 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px]'
         }`}
         title="Panic Button - Report emergency"
       >
@@ -725,48 +725,48 @@ export default function Home() {
       </button>
 
       {panicMode && (
-        <div className="fixed bottom-32 right-8 z-50 bg-white p-4 rounded-xl shadow-xl border-2 border-red-600">
-          <p className="text-lg font-semibold text-red-600 flex items-center gap-2">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600" />
+        <div className="fixed bottom-32 right-8 z-50 bg-white p-4 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-lg font-bold text-red-600 flex items-center gap-2">
+            <div className="animate-spin h-5 w-5 border-b-4 border-red-600" />
             Recording emergency report...
           </p>
         </div>
       )}
       {/* History Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-2xl transform transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 w-80 bg-cyan-200 border-r-4 border-black shadow-[8px_0px_0px_0px_rgba(0,0,0,1)] transform transition-transform duration-300 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-800">History</h2>
-          <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
+        <div className="flex items-center justify-between p-6 border-b-4 border-black">
+          <h2 className="text-xl font-bold text-black">History</h2>
+          <button onClick={() => setSidebarOpen(false)} className="text-black hover:scale-110 transition-transform">
             <FiX size={24} />
           </button>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex border-b">
+        <div className="flex border-b-4 border-black">
           <button
             onClick={() => setHistoryFilter('all')}
-            className={`flex-1 py-3 text-sm font-medium ${
-              historyFilter === 'all' ? 'text-green-700 border-b-2 border-green-700' : 'text-gray-500'
+            className={`flex-1 py-3 text-sm font-bold border-r-4 border-black transition-all ${
+              historyFilter === 'all' ? 'bg-green-400 text-black' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
             All
           </button>
           <button
             onClick={() => setHistoryFilter('scams')}
-            className={`flex-1 py-3 text-sm font-medium ${
-              historyFilter === 'scams' ? 'text-red-700 border-b-2 border-red-700' : 'text-gray-500'
+            className={`flex-1 py-3 text-sm font-bold border-r-4 border-black transition-all ${
+              historyFilter === 'scams' ? 'bg-red-400 text-black' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
             Scams Blocked
           </button>
           <button
             onClick={() => setHistoryFilter('benefits')}
-            className={`flex-1 py-3 text-sm font-medium ${
-              historyFilter === 'benefits' ? 'text-blue-700 border-b-2 border-blue-700' : 'text-gray-500'
+            className={`flex-1 py-3 text-sm font-bold transition-all ${
+              historyFilter === 'benefits' ? 'bg-blue-400 text-black' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
             Benefits Found
@@ -776,29 +776,29 @@ export default function Home() {
         {/* History Items */}
         <div className="overflow-y-auto h-[calc(100%-140px)]">
           {filteredHistory.length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
-              <FiClock size={48} className="mx-auto mb-3 opacity-30" />
-              <p className="text-lg">No history yet</p>
+            <div className="p-6 text-center text-black">
+              <FiClock size={48} className="mx-auto mb-3" />
+              <p className="text-lg font-bold">No history yet</p>
             </div>
           ) : (
             filteredHistory.map(item => (
-              <div key={item.id} className="p-4 border-b hover:bg-gray-50 cursor-pointer">
+              <div key={item.id} className="p-4 border-b-4 border-black bg-white hover:bg-yellow-100 cursor-pointer transition-colors">
                 <div className="flex items-start justify-between mb-2">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm font-medium text-black">
                     {item.date.toLocaleDateString()} {item.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
-                  <span className={`px-2 py-1 text-xs font-semibold rounded ${
-                    item.verdict === 'danger' ? 'bg-red-100 text-red-700' :
-                    item.verdict === 'caution' ? 'bg-amber-100 text-amber-700' :
-                    item.verdict === 'benefits' ? 'bg-blue-100 text-blue-700' :
-                    'bg-green-100 text-green-700'
+                  <span className={`px-3 py-1 text-xs font-bold border-2 border-black ${
+                    item.verdict === 'danger' ? 'bg-red-400 text-black' :
+                    item.verdict === 'caution' ? 'bg-amber-400 text-black' :
+                    item.verdict === 'benefits' ? 'bg-blue-400 text-black' :
+                    'bg-green-400 text-black'
                   }`}>
                     {item.verdict === 'danger' ? 'Scam' :
                      item.verdict === 'caution' ? 'Warning' :
                      item.verdict === 'benefits' ? 'Benefits' : 'Safe'}
                   </span>
                 </div>
-                <p className="text-sm text-gray-800">{item.snippet}</p>
+                <p className="text-sm font-medium text-black">{item.snippet}</p>
               </div>
             ))
           )}
@@ -816,18 +816,18 @@ export default function Home() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white shadow-md px-6 py-4">
+        <header className="bg-white border-b-4 border-black shadow-[0px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-4">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="text-gray-600 hover:text-gray-800"
+                className="text-black hover:scale-110 transition-transform"
               >
                 <FiMenu size={24} />
               </button>
               <div className="flex items-center gap-3">
-                <FiShield size={32} className="text-green-700" />
-                <h1 className="text-2xl font-bold text-gray-800">Sovereign Financial Guardian</h1>
+                <FiShield size={32} className="text-green-600" />
+                <h1 className="text-2xl font-bold text-black">Sovereign Financial Guardian</h1>
               </div>
             </div>
 
@@ -835,7 +835,7 @@ export default function Home() {
             <select
               value={selectedLanguage}
               onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="px-4 py-2 border-4 border-black bg-white text-lg font-bold focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
             >
               {languages.map(lang => (
                 <option key={lang.code} value={lang.code}>{lang.name}</option>
@@ -871,10 +871,10 @@ export default function Home() {
                       <button
                         key={lang.code}
                         onClick={() => setSelectedLanguage(lang.code)}
-                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all cursor-pointer hover:scale-105 ${
+                        className={`px-4 py-2 text-sm font-bold transition-all cursor-pointer border-4 border-black ${
                           selectedLanguage === lang.code
-                            ? 'bg-green-600 text-white shadow-lg scale-105'
-                            : 'bg-white text-gray-600 border-2 border-gray-300 hover:border-green-400'
+                            ? 'bg-green-400 text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] scale-105'
+                            : 'bg-white text-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-105'
                         }`}
                       >
                         {lang.name}
@@ -893,10 +893,10 @@ export default function Home() {
                     )}
                     <button
                       onClick={handleVoiceRecord}
-                      className={`relative mx-auto w-48 h-48 rounded-full shadow-2xl flex items-center justify-center transition-all transform ${
+                      className={`relative mx-auto w-48 h-48 border-8 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center transition-all transform ${
                         recording
-                          ? 'bg-red-600 text-white scale-110 ring-8 ring-red-300'
-                          : 'bg-gradient-to-br from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:scale-110 hover:shadow-3xl ring-4 ring-green-300 ring-opacity-50'
+                          ? 'bg-red-500 text-white scale-110'
+                          : 'bg-green-400 text-black hover:bg-green-300 hover:scale-110 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[4px] hover:translate-y-[4px]'
                       }`}
                       title="Tap to speak in your language"
                     >
@@ -939,42 +939,42 @@ export default function Home() {
                 <div className="flex flex-wrap gap-3 justify-center">
                   <button
                     onClick={() => handleQuickAction('sms')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-green-600 text-green-700 rounded-full hover:bg-green-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-green-400 border-4 border-black text-black hover:bg-green-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     <FiMessageSquare size={20} />
                     Check SMS
                   </button>
                   <button
                     onClick={() => handleQuickAction('benefits')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-600 text-blue-700 rounded-full hover:bg-blue-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-blue-400 border-4 border-black text-black hover:bg-blue-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     <FiGift size={20} />
                     Find Benefits
                   </button>
                   <button
                     onClick={() => setShowLoanCalculator(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-purple-600 text-purple-700 rounded-full hover:bg-purple-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-purple-400 border-4 border-black text-black hover:bg-purple-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     <FiDollarSign size={20} />
                     Loan Calculator
                   </button>
                   <button
                     onClick={() => setShowShadowBalance(!showShadowBalance)}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-teal-600 text-teal-700 rounded-full hover:bg-teal-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-cyan-400 border-4 border-black text-black hover:bg-cyan-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     {showShadowBalance ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                     Shadow Balance
                   </button>
                   <button
                     onClick={() => handleQuickAction('document')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-orange-600 text-orange-700 rounded-full hover:bg-orange-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-orange-400 border-4 border-black text-black hover:bg-orange-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     <FiFileText size={20} />
                     Upload Document
                   </button>
                   <button
                     onClick={() => setShowBenefitTracker(!showBenefitTracker)}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-700 rounded-full hover:bg-indigo-50 transition-colors text-lg font-medium shadow-md"
+                    className="flex items-center gap-2 px-6 py-3 bg-indigo-400 border-4 border-black text-black hover:bg-indigo-300 transition-all text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   >
                     <FiAward size={20} />
                     Track Applications
@@ -982,9 +982,9 @@ export default function Home() {
                 </div>
 
                 {/* Voice Command Examples */}
-                <div className="mt-8 max-w-2xl mx-auto bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
-                  <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center flex items-center justify-center gap-2">
-                    <FiMic className="text-blue-600" size={20} />
+                <div className="mt-8 max-w-2xl mx-auto bg-blue-200 p-6 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                  <h3 className="text-lg font-bold text-black mb-4 text-center flex items-center justify-center gap-2">
+                    <FiMic className="text-black" size={20} />
                     {selectedLanguage === 'hi' ? 'उदाहरण वॉयस कमांड' :
                      selectedLanguage === 'mr' ? 'उदाहरण व्हॉइस कमांड' :
                      selectedLanguage === 'es' ? 'Comandos de voz de ejemplo' :
@@ -993,62 +993,62 @@ export default function Home() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {selectedLanguage === 'hi' ? (
                       <>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"मुझे एक SMS मिला है..."</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"मुझे एक SMS मिला है..."</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"मुझे कौन से लाभ मिल सकते हैं?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"मुझे कौन से लाभ मिल सकते हैं?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"यह लोन सुरक्षित है?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"यह लोन सुरक्षित है?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"मेरा बैलेंस क्या है?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"मेरा बैलेंस क्या है?"</span>
                         </div>
                       </>
                     ) : selectedLanguage === 'mr' ? (
                       <>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"मला एक SMS आला आहे..."</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"मला एक SMS आला आहे..."</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"मला कोणते फायदे मिळू शकतात?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"मला कोणते फायदे मिळू शकतात?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"हे कर्ज सुरक्षित आहे का?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"हे कर्ज सुरक्षित आहे का?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"माझे बॅलन्स काय आहे?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"माझे बॅलन्स काय आहे?"</span>
                         </div>
                       </>
                     ) : selectedLanguage === 'es' ? (
                       <>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"Recibí un SMS..."</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"Recibí un SMS..."</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"¿Qué beneficios puedo obtener?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"¿Qué beneficios puedo obtener?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"¿Este préstamo es seguro?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"¿Este préstamo es seguro?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"¿Cuál es mi saldo?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"¿Cuál es mi saldo?"</span>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"I received an SMS..."</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"I received an SMS..."</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"What benefits can I get?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"What benefits can I get?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"Is this loan safe?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"Is this loan safe?"</span>
                         </div>
-                        <div className="bg-white p-3 rounded-lg text-sm">
-                          <span className="font-semibold text-gray-800">"What's my balance?"</span>
+                        <div className="bg-white p-3 border-2 border-black text-sm">
+                          <span className="font-bold text-black">"What's my balance?"</span>
                         </div>
                       </>
                     )}
@@ -1102,9 +1102,9 @@ export default function Home() {
             )}
 
             {loading && (
-              <div className="flex items-center gap-3 text-gray-600">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-700" />
-                <span className="text-lg">Analyzing...</span>
+              <div className="flex items-center gap-3 text-black">
+                <div className="animate-spin h-6 w-6 border-b-4 border-black" />
+                <span className="text-lg font-bold">Analyzing...</span>
               </div>
             )}
 
@@ -1113,7 +1113,7 @@ export default function Home() {
         </div>
 
         {/* Input Section */}
-        <div className="bg-white border-t shadow-lg px-6 py-6">
+        <div className="bg-white border-t-4 border-black shadow-[0px_-4px_0px_0px_rgba(0,0,0,1)] px-6 py-6">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-end gap-3">
               <div className="flex-1">
@@ -1128,7 +1128,7 @@ export default function Home() {
                   }}
                   placeholder="Paste message or describe your question..."
                   rows={3}
-                  className="w-full px-6 py-4 border-2 border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                  className="w-full px-6 py-4 border-4 border-black text-lg font-medium focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] resize-none transition-all"
                   disabled={loading}
                 />
               </div>
@@ -1137,10 +1137,10 @@ export default function Home() {
                 {/* Voice Record Button */}
                 <button
                   onClick={handleVoiceRecord}
-                  className={`p-4 rounded-xl transition-colors ${
+                  className={`p-4 border-4 border-black transition-all ${
                     recording
-                      ? 'bg-red-600 text-white animate-pulse'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-red-500 text-white animate-pulse shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                      : 'bg-gray-200 text-black hover:bg-gray-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]'
                   }`}
                   title="Voice input"
                   disabled={loading}
@@ -1151,12 +1151,12 @@ export default function Home() {
                 {/* File Upload Button */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-4 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors"
+                  className="p-4 bg-gray-200 text-black border-4 border-black hover:bg-gray-300 transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   title="Upload document"
                   disabled={loading || uploadingFile}
                 >
                   {uploadingFile ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-600" />
+                    <div className="animate-spin h-6 w-6 border-b-4 border-black" />
                   ) : (
                     <FiPaperclip size={24} />
                   )}
@@ -1173,7 +1173,7 @@ export default function Home() {
                 <button
                   onClick={handleSendMessage}
                   disabled={loading || !inputMessage.trim()}
-                  className="p-4 bg-green-700 text-white rounded-xl hover:bg-green-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="p-4 bg-green-500 text-black border-4 border-black hover:bg-green-400 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px]"
                   title="Send message"
                 >
                   <FiSend size={24} />
@@ -1181,7 +1181,7 @@ export default function Home() {
               </div>
             </div>
 
-            <p className="text-sm text-gray-500 mt-3 text-center">
+            <p className="text-sm font-medium text-black mt-3 text-center">
               Documents: PDF, JPG, PNG (max 10MB) • Press Enter to send • Shift+Enter for new line
             </p>
           </div>
@@ -1196,9 +1196,9 @@ function ChatMessage({ message }: { message: Message }) {
   if (message.role === 'user') {
     return (
       <div className="flex justify-end">
-        <div className="bg-green-700 text-white px-6 py-4 rounded-2xl rounded-tr-sm max-w-2xl shadow-md">
-          <p className="text-lg leading-relaxed">{message.content}</p>
-          <p className="text-xs text-green-100 mt-2">
+        <div className="bg-green-400 text-black px-6 py-4 border-4 border-black max-w-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <p className="text-lg leading-relaxed font-medium">{message.content}</p>
+          <p className="text-xs font-bold mt-2">
             {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
@@ -1212,9 +1212,9 @@ function ChatMessage({ message }: { message: Message }) {
         {message.agentResponse && message.responseType !== 'general' ? (
           <VerdictCard response={message.agentResponse} responseType={message.responseType!} userProfile={userProfile} />
         ) : (
-          <div className="bg-white px-6 py-4 rounded-2xl rounded-tl-sm shadow-md border border-gray-200">
-            <p className="text-lg leading-relaxed text-gray-800">{message.content}</p>
-            <p className="text-xs text-gray-500 mt-2">
+          <div className="bg-white px-6 py-4 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <p className="text-lg leading-relaxed text-black font-medium">{message.content}</p>
+            <p className="text-xs text-black font-bold mt-2">
               {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
@@ -1239,36 +1239,36 @@ function VerdictCard({
   if (responseType === 'phish') {
     const phishResponse = response as PhishDetectorResult
     const colorClasses = {
-      Red: 'bg-red-50 border-red-500',
-      Yellow: 'bg-amber-50 border-amber-500',
-      Green: 'bg-green-50 border-green-500',
+      Red: 'bg-red-200',
+      Yellow: 'bg-amber-200',
+      Green: 'bg-green-200',
     }
     const iconClasses = {
-      Red: 'text-red-600',
-      Yellow: 'text-amber-600',
-      Green: 'text-green-600',
+      Red: 'text-black',
+      Yellow: 'text-black',
+      Green: 'text-black',
     }
     const Icon = phishResponse.risk_level === 'Red' ? FiAlertTriangle :
                  phishResponse.risk_level === 'Yellow' ? FiAlertTriangle : FiCheckCircle
 
     return (
-      <Card className={`${colorClasses[phishResponse.risk_level]} border-l-4 shadow-lg`}>
+      <Card className={`${colorClasses[phishResponse.risk_level]}`}>
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <Icon size={32} className={iconClasses[phishResponse.risk_level]} />
               <div>
-                <CardTitle className="text-2xl font-bold">
+                <CardTitle className="text-2xl font-bold text-black">
                   {phishResponse.risk_level === 'Red' ? 'DANGER: Scam Detected' :
                    phishResponse.risk_level === 'Yellow' ? 'CAUTION: Suspicious' :
                    'SAFE: No Threats Detected'}
                 </CardTitle>
-                <p className="text-sm text-gray-600 mt-1">Threat Type: {phishResponse.threat_type}</p>
+                <p className="text-sm font-bold text-black mt-1">Threat Type: {phishResponse.threat_type}</p>
               </div>
             </div>
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-black hover:scale-110 transition-transform"
             >
               {expanded ? <FiChevronUp size={24} /> : <FiChevronDown size={24} />}
             </button>
@@ -1278,35 +1278,35 @@ function VerdictCard({
         {expanded && (
           <CardContent className="space-y-4">
             <div>
-              <h4 className="font-semibold text-lg mb-2">Explanation:</h4>
-              <p className="text-lg leading-relaxed text-gray-800">{phishResponse.explanation}</p>
+              <h4 className="font-bold text-lg mb-2 text-black">Explanation:</h4>
+              <p className="text-lg leading-relaxed text-black font-medium">{phishResponse.explanation}</p>
             </div>
 
             {phishResponse.indicators_found.length > 0 && (
               <div>
-                <h4 className="font-semibold text-lg mb-2">Warning Signs Found:</h4>
+                <h4 className="font-bold text-lg mb-2 text-black">Warning Signs Found:</h4>
                 <ul className="space-y-2">
                   {phishResponse.indicators_found.map((indicator, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <FiAlertTriangle className="text-red-600 mt-1 flex-shrink-0" size={18} />
-                      <span className="text-lg">{indicator}</span>
+                      <FiAlertTriangle className="text-black mt-1 flex-shrink-0" size={18} />
+                      <span className="text-lg font-medium text-black">{indicator}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-              <h4 className="font-semibold text-lg mb-2">What You Should Do:</h4>
-              <p className="text-lg leading-relaxed">{phishResponse.recommended_action}</p>
+            <div className="bg-white p-4 border-2 border-black">
+              <h4 className="font-bold text-lg mb-2 text-black">What You Should Do:</h4>
+              <p className="text-lg leading-relaxed font-medium text-black">{phishResponse.recommended_action}</p>
             </div>
 
             {phishResponse.risk_level === 'Red' && (
               <div className="flex gap-3 pt-2">
-                <Button className="bg-red-600 hover:bg-red-700 text-white text-lg px-6 py-3">
+                <Button className="bg-red-500 hover:bg-red-400 text-black text-lg px-6 py-3 font-bold">
                   Block Sender
                 </Button>
-                <Button variant="outline" className="text-lg px-6 py-3">
+                <Button variant="outline" className="text-lg px-6 py-3 font-bold">
                   Report Scam
                 </Button>
               </div>
@@ -1320,9 +1320,9 @@ function VerdictCard({
   if (responseType === 'document') {
     const docResponse = response as DocumentAnalyzerResult
     const colorClasses = {
-      Red: 'bg-red-50 border-red-500',
-      Yellow: 'bg-amber-50 border-amber-500',
-      Green: 'bg-green-50 border-green-500',
+      Red: 'bg-red-200',
+      Yellow: 'bg-amber-200',
+      Green: 'bg-green-200',
     }
     const riskLevel = docResponse.risk_level || 'Yellow'
 
@@ -1332,16 +1332,16 @@ function VerdictCard({
     }
 
     return (
-      <Card className={`${colorClasses[riskLevel]} border-l-4 shadow-lg`}>
+      <Card className={`${colorClasses[riskLevel]}`}>
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <FiFileText size={32} className="text-purple-600" />
-              <CardTitle className="text-2xl font-bold">Loan Document Analysis</CardTitle>
+              <FiFileText size={32} className="text-black" />
+              <CardTitle className="text-2xl font-bold text-black">Loan Document Analysis</CardTitle>
             </div>
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-black hover:scale-110 transition-transform"
             >
               {expanded ? <FiChevronUp size={24} /> : <FiChevronDown size={24} />}
             </button>
@@ -1351,49 +1351,49 @@ function VerdictCard({
         {expanded && (
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Stated Interest Rate</p>
-                <p className="text-2xl font-bold text-gray-800">{docResponse.stated_interest_rate}</p>
+              <div className="bg-white p-4 border-4 border-black">
+                <p className="text-sm font-bold text-black mb-1">Stated Interest Rate</p>
+                <p className="text-2xl font-bold text-black">{docResponse.stated_interest_rate}</p>
               </div>
-              <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">Effective Interest Rate</p>
+              <div className="bg-white p-4 border-4 border-black">
+                <p className="text-sm font-bold text-black mb-1">Effective Interest Rate</p>
                 <p className="text-2xl font-bold text-red-600">{docResponse.effective_interest_rate}</p>
               </div>
             </div>
 
             {/* Hidden Cost Progress Bar */}
-            <div className="bg-white bg-opacity-70 p-4 rounded-lg">
+            <div className="bg-white p-4 border-4 border-black">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-semibold text-gray-700">Hidden Cost Breakdown</p>
-                <FiTrendingUp className="text-red-600" size={20} />
+                <p className="text-sm font-bold text-black">Hidden Cost Breakdown</p>
+                <FiTrendingUp className="text-black" size={20} />
               </div>
-              <div className="relative h-8 bg-gray-200 rounded-full overflow-hidden">
+              <div className="relative h-8 bg-gray-200 border-2 border-black overflow-hidden">
                 <div
-                  className="absolute h-full bg-gradient-to-r from-red-500 to-red-700 transition-all duration-1000 flex items-center justify-end px-3"
+                  className="absolute h-full bg-red-500 transition-all duration-1000 flex items-center justify-end px-3"
                   style={{ width: '75%' }}
                 >
                   <span className="text-white text-xs font-bold">True Cost Much Higher</span>
                 </div>
               </div>
-              <div className="flex justify-between mt-2 text-xs text-gray-600">
+              <div className="flex justify-between mt-2 text-xs font-bold text-black">
                 <span>What they show</span>
                 <span>What you actually pay</span>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold text-lg mb-2">Explanation:</h4>
-              <p className="text-lg leading-relaxed text-gray-800">{docResponse.explanation}</p>
+              <h4 className="font-bold text-lg mb-2 text-black">Explanation:</h4>
+              <p className="text-lg leading-relaxed text-black font-medium">{docResponse.explanation}</p>
             </div>
 
             {docResponse.hidden_charges.length > 0 && (
               <div>
-                <h4 className="font-semibold text-lg mb-2">Hidden Charges Found:</h4>
+                <h4 className="font-bold text-lg mb-2 text-black">Hidden Charges Found:</h4>
                 <ul className="space-y-2">
                   {docResponse.hidden_charges.map((charge, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <FiAlertTriangle className="text-amber-600 mt-1 flex-shrink-0" size={18} />
-                      <span className="text-lg">{charge}</span>
+                      <FiAlertTriangle className="text-black mt-1 flex-shrink-0" size={18} />
+                      <span className="text-lg font-medium text-black">{charge}</span>
                     </li>
                   ))}
                 </ul>
@@ -1402,21 +1402,21 @@ function VerdictCard({
 
             {docResponse.rbi_violations.length > 0 && (
               <div>
-                <h4 className="font-semibold text-lg mb-2">RBI Compliance:</h4>
+                <h4 className="font-bold text-lg mb-2 text-black">RBI Compliance:</h4>
                 <ul className="space-y-2">
                   {docResponse.rbi_violations.map((violation, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <FiAlertTriangle className="text-red-600 mt-1 flex-shrink-0" size={18} />
-                      <span className="text-lg">{violation}</span>
+                      <FiAlertTriangle className="text-black mt-1 flex-shrink-0" size={18} />
+                      <span className="text-lg font-medium text-black">{violation}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-              <h4 className="font-semibold text-lg mb-2">Recommended Action:</h4>
-              <p className="text-lg leading-relaxed">{docResponse.recommended_action}</p>
+            <div className="bg-white p-4 border-2 border-black">
+              <h4 className="font-bold text-lg mb-2 text-black">Recommended Action:</h4>
+              <p className="text-lg leading-relaxed font-medium text-black">{docResponse.recommended_action}</p>
             </div>
           </CardContent>
         )}
@@ -1444,16 +1444,16 @@ function VerdictCard({
     }
 
     return (
-      <Card className="bg-blue-50 border-l-4 border-blue-500 shadow-lg">
+      <Card className="bg-blue-200">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <FiGift size={32} className="text-blue-600" />
-              <CardTitle className="text-2xl font-bold">Benefits You Can Claim</CardTitle>
+              <FiGift size={32} className="text-black" />
+              <CardTitle className="text-2xl font-bold text-black">Benefits You Can Claim</CardTitle>
             </div>
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-gray-600 hover:text-gray-800"
+              className="text-black hover:scale-110 transition-transform"
             >
               {expanded ? <FiChevronUp size={24} /> : <FiChevronDown size={24} />}
             </button>
@@ -1463,30 +1463,30 @@ function VerdictCard({
         {expanded && (
           <CardContent className="space-y-4">
             <div>
-              <p className="text-lg leading-relaxed text-gray-800 mb-4">{benefitsResponse.explanation}</p>
-              <div className="bg-blue-100 p-4 rounded-lg">
-                <p className="text-sm text-gray-700 mb-1">Total Potential Benefits</p>
-                <p className="text-3xl font-bold text-blue-700">{benefitsResponse.total_potential_benefits}</p>
+              <p className="text-lg leading-relaxed text-black font-medium mb-4">{benefitsResponse.explanation}</p>
+              <div className="bg-white p-4 border-4 border-black">
+                <p className="text-sm font-bold text-black mb-1">Total Potential Benefits</p>
+                <p className="text-3xl font-bold text-black">{benefitsResponse.total_potential_benefits}</p>
               </div>
             </div>
 
             <div>
-              <h4 className="font-semibold text-lg mb-3">Matched Schemes:</h4>
+              <h4 className="font-bold text-lg mb-3 text-black">Matched Schemes:</h4>
               <div className="space-y-3">
                 {benefitsResponse.matched_schemes.map((scheme, idx) => (
-                  <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-blue-200">
+                  <div key={idx} className="bg-white p-4 border-4 border-black">
                     <div className="flex items-start justify-between mb-2">
-                      <h5 className="font-semibold text-lg text-gray-800">{scheme.scheme_name}</h5>
-                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                        scheme.priority === 'high' ? 'bg-green-100 text-green-700' :
-                        scheme.priority === 'medium' ? 'bg-amber-100 text-amber-700' :
-                        'bg-gray-100 text-gray-700'
+                      <h5 className="font-bold text-lg text-black">{scheme.scheme_name}</h5>
+                      <span className={`px-3 py-1 text-sm font-bold border-2 border-black ${
+                        scheme.priority === 'high' ? 'bg-green-400 text-black' :
+                        scheme.priority === 'medium' ? 'bg-amber-400 text-black' :
+                        'bg-gray-300 text-black'
                       }`}>
                         {scheme.priority.toUpperCase()}
                       </span>
                     </div>
-                    <p className="text-xl font-bold text-blue-600 mb-2">{scheme.benefit_amount}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <p className="text-xl font-bold text-black mb-2">{scheme.benefit_amount}</p>
+                    <div className="flex items-center gap-4 text-sm font-medium text-black">
                       <span>Match: {scheme.eligibility_match}</span>
                       <span>Difficulty: {scheme.application_difficulty}</span>
                     </div>
@@ -1497,10 +1497,10 @@ function VerdictCard({
 
             {benefitsResponse.next_steps.length > 0 && (
               <div>
-                <h4 className="font-semibold text-lg mb-2">Next Steps:</h4>
+                <h4 className="font-bold text-lg mb-2 text-black">Next Steps:</h4>
                 <ol className="space-y-2 list-decimal list-inside">
                   {benefitsResponse.next_steps.map((step, idx) => (
-                    <li key={idx} className="text-lg leading-relaxed">{step}</li>
+                    <li key={idx} className="text-lg leading-relaxed font-medium text-black">{step}</li>
                   ))}
                 </ol>
               </div>
@@ -1508,10 +1508,10 @@ function VerdictCard({
 
             {benefitsResponse.required_documents.length > 0 && (
               <div>
-                <h4 className="font-semibold text-lg mb-2">Required Documents:</h4>
+                <h4 className="font-bold text-lg mb-2 text-black">Required Documents:</h4>
                 <div className="flex flex-wrap gap-2">
                   {benefitsResponse.required_documents.map((doc, idx) => (
-                    <span key={idx} className="px-3 py-2 bg-white rounded-lg text-sm border border-blue-200">
+                    <span key={idx} className="px-3 py-2 bg-white text-sm font-medium border-2 border-black">
                       {doc}
                     </span>
                   ))}
@@ -1519,7 +1519,7 @@ function VerdictCard({
               </div>
             )}
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-6 py-3 w-full">
+            <Button className="bg-blue-400 hover:bg-blue-300 text-black text-lg px-6 py-3 w-full font-bold">
               Start Application Process
             </Button>
           </CardContent>

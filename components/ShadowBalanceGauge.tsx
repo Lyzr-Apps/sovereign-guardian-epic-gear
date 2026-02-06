@@ -29,25 +29,25 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
 
   const riskColors = {
     safe: {
-      bg: 'bg-green-50',
-      border: 'border-green-500',
-      text: 'text-green-700',
-      gauge: 'from-green-400 to-green-600',
-      icon: <FiCheckCircle size={24} className="text-green-600" />
+      bg: 'bg-green-200',
+      border: 'border-black',
+      text: 'text-black',
+      gauge: 'bg-green-500',
+      icon: <FiCheckCircle size={24} className="text-black" />
     },
     caution: {
-      bg: 'bg-amber-50',
-      border: 'border-amber-500',
-      text: 'text-amber-700',
-      gauge: 'from-amber-400 to-amber-600',
-      icon: <FiAlertTriangle size={24} className="text-amber-600" />
+      bg: 'bg-amber-200',
+      border: 'border-black',
+      text: 'text-black',
+      gauge: 'bg-amber-500',
+      icon: <FiAlertTriangle size={24} className="text-black" />
     },
     danger: {
-      bg: 'bg-red-50',
-      border: 'border-red-500',
-      text: 'text-red-700',
-      gauge: 'from-red-400 to-red-600',
-      icon: <FiAlertTriangle size={24} className="text-red-600" />
+      bg: 'bg-red-200',
+      border: 'border-black',
+      text: 'text-black',
+      gauge: 'bg-red-500',
+      icon: <FiAlertTriangle size={24} className="text-black" />
     }
   }
 
@@ -73,14 +73,14 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
   }
 
   return (
-    <Card className={`${currentRisk.bg} border-l-4 ${currentRisk.border} shadow-lg`}>
+    <Card className={`${currentRisk.bg}`}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <FiDollarSign size={32} className={currentRisk.text} />
+            <FiDollarSign size={32} className="text-black" />
             <div>
-              <CardTitle className="text-2xl font-bold">Shadow Balance</CardTitle>
-              <p className="text-sm text-gray-600 mt-1">Your real spending power</p>
+              <CardTitle className="text-2xl font-bold text-black">Shadow Balance</CardTitle>
+              <p className="text-sm font-bold text-black mt-1">Your real spending power</p>
             </div>
           </div>
           {currentRisk.icon}
@@ -90,32 +90,32 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
       <CardContent className="space-y-6">
         {/* Balance Comparison Grid */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Bank Balance</p>
-            <p className="text-2xl font-bold text-gray-800">{formatCurrency(shadowBalance.bankBalance)}</p>
+          <div className="bg-white p-4 border-4 border-black">
+            <p className="text-sm font-bold text-black mb-1">Bank Balance</p>
+            <p className="text-2xl font-bold text-black">{formatCurrency(shadowBalance.bankBalance)}</p>
           </div>
-          <div className="bg-white bg-opacity-70 p-4 rounded-lg">
-            <p className="text-sm text-gray-600 mb-1">Predicted Bills (14 days)</p>
+          <div className="bg-white p-4 border-4 border-black">
+            <p className="text-sm font-bold text-black mb-1">Predicted Bills (14 days)</p>
             <p className="text-2xl font-bold text-red-600">-{formatCurrency(shadowBalance.predictedBills14Days)}</p>
           </div>
         </div>
 
         {/* Safe to Spend Gauge */}
-        <div className="bg-white bg-opacity-70 p-6 rounded-lg">
+        <div className="bg-white p-6 border-4 border-black">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-sm font-semibold text-gray-700">Safe to Spend</p>
-              <p className="text-4xl font-bold text-green-700 mt-1">{formatCurrency(shadowBalance.realBalance)}</p>
+              <p className="text-sm font-bold text-black">Safe to Spend</p>
+              <p className="text-4xl font-bold text-black mt-1">{formatCurrency(shadowBalance.realBalance)}</p>
             </div>
-            <div className={`px-4 py-2 rounded-full font-semibold ${currentRisk.text} bg-white`}>
+            <div className="px-4 py-2 font-bold text-black bg-white border-2 border-black">
               {shadowBalance.riskLevel.toUpperCase()}
             </div>
           </div>
 
           {/* Visual Gauge */}
-          <div className="relative h-12 bg-gray-200 rounded-full overflow-hidden mt-4">
+          <div className="relative h-12 bg-gray-200 border-2 border-black overflow-hidden mt-4">
             <div
-              className={`absolute h-full bg-gradient-to-r ${currentRisk.gauge} transition-all duration-1000 flex items-center justify-end px-4`}
+              className={`absolute h-full ${currentRisk.gauge} transition-all duration-1000 flex items-center justify-end px-4`}
               style={{ width: `${safePercentage}%` }}
             >
               {safePercentage > 20 && (
@@ -126,21 +126,21 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
             </div>
           </div>
 
-          <div className="flex justify-between mt-2 text-xs text-gray-600">
+          <div className="flex justify-between mt-2 text-xs font-bold text-black">
             <span>0</span>
             <span>Bank Balance: {formatCurrency(shadowBalance.bankBalance)}</span>
           </div>
         </div>
 
         {/* Risk Level Explanation */}
-        <div className={`p-4 rounded-lg border-2 ${currentRisk.border} bg-white bg-opacity-50`}>
-          <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
+        <div className="p-4 border-4 border-black bg-white">
+          <h4 className="font-bold text-lg mb-2 flex items-center gap-2 text-black">
             {currentRisk.icon}
             {shadowBalance.riskLevel === 'safe' && 'You have enough for upcoming bills'}
             {shadowBalance.riskLevel === 'caution' && 'Watch your spending - bills coming soon'}
             {shadowBalance.riskLevel === 'danger' && 'Warning: Predicted bills exceed balance'}
           </h4>
-          <p className="text-base leading-relaxed text-gray-700">
+          <p className="text-base leading-relaxed font-medium text-black">
             {shadowBalance.riskLevel === 'safe' &&
               'Your real balance is healthy. You can spend safely after accounting for upcoming bills.'}
             {shadowBalance.riskLevel === 'caution' &&
@@ -152,23 +152,23 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
 
         {/* Vampire Bills Section */}
         {shadowBalance.vampireBills.length > 0 && (
-          <div className="bg-red-50 p-4 rounded-lg border-2 border-red-300">
+          <div className="bg-red-200 p-4 border-4 border-black">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <FiZap size={24} className="text-red-600" />
-                <h4 className="font-semibold text-lg text-red-800">
+                <FiZap size={24} className="text-black" />
+                <h4 className="font-bold text-lg text-black">
                   Vampire Bills Detected ({shadowBalance.vampireBills.length})
                 </h4>
               </div>
               <button
                 onClick={() => setExpandedVampire(!expandedVampire)}
-                className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                className="text-black hover:scale-110 transition-transform font-bold text-sm"
               >
                 {expandedVampire ? 'Hide' : 'Show All'}
               </button>
             </div>
 
-            <p className="text-sm text-gray-700 mb-4">
+            <p className="text-sm font-medium text-black mb-4">
               You have subscriptions you haven't used in 30+ days. Cancel them to save money!
             </p>
 
@@ -177,16 +177,16 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
                 {shadowBalance.vampireBills.map((bill) => (
                   <div
                     key={bill.id}
-                    className="bg-white p-4 rounded-lg border border-red-200 shadow-sm"
+                    className="bg-white p-4 border-4 border-black"
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h5 className="font-semibold text-base text-gray-800">{bill.name}</h5>
-                        <p className="text-sm text-gray-600 mt-1">{bill.category}</p>
+                        <h5 className="font-bold text-base text-black">{bill.name}</h5>
+                        <p className="text-sm font-medium text-black mt-1">{bill.category}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xl font-bold text-red-600">{formatCurrency(bill.amount)}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs font-bold text-black">
                           {bill.frequency === 'monthly' && 'per month'}
                           {bill.frequency === 'yearly' && 'per year'}
                           {bill.frequency === 'weekly' && 'per week'}
@@ -194,7 +194,7 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                    <div className="flex items-center gap-4 text-sm font-medium text-black mb-3">
                       <div className="flex items-center gap-1">
                         <FiCalendar size={14} />
                         <span>Due in {getNextDueDate(bill)} days</span>
@@ -207,7 +207,7 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
 
                     <Button
                       onClick={() => onCancelBill && onCancelBill(bill.id)}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                      className="w-full bg-red-500 hover:bg-red-400 text-white flex items-center justify-center gap-2 font-bold"
                     >
                       <FiX size={18} />
                       Cancel This Subscription
@@ -218,9 +218,9 @@ export function ShadowBalanceGauge({ shadowBalance, onCancelBill }: ShadowBalanc
             )}
 
             {!expandedVampire && (
-              <div className="bg-white p-3 rounded-lg border border-red-200">
-                <p className="text-sm text-gray-700">
-                  <span className="font-semibold text-red-700">
+              <div className="bg-white p-3 border-2 border-black">
+                <p className="text-sm font-medium text-black">
+                  <span className="font-bold text-black">
                     Total wasted per month:{' '}
                     {formatCurrency(
                       shadowBalance.vampireBills.reduce((sum, bill) => {
