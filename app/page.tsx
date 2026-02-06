@@ -428,37 +428,87 @@ export default function Home() {
 
   const handleVoiceRecord = async () => {
     if (!recording) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-        const mediaRecorder = new MediaRecorder(stream)
-        mediaRecorderRef.current = mediaRecorder
-        const chunks: Blob[] = []
+      // Check if browser supports speech recognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
 
-        mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) {
-            chunks.push(e.data)
+      if (SpeechRecognition) {
+        // Use Web Speech Recognition API
+        const recognition = new SpeechRecognition()
+
+        // Map language codes to speech recognition locale codes
+        const languageMap: Record<string, string> = {
+          'en': 'en-US',
+          'hi': 'hi-IN',
+          'mr': 'mr-IN',
+          'es': 'es-ES',
+          'pa': 'pa-IN'
+        }
+
+        recognition.lang = languageMap[selectedLanguage] || 'en-US'
+        recognition.continuous = false
+        recognition.interimResults = false
+        recognition.maxAlternatives = 1
+
+        recognition.onstart = () => {
+          setRecording(true)
+        }
+
+        recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript
+          setInputMessage(transcript)
+          setRecording(false)
+        }
+
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error)
+          setRecording(false)
+        }
+
+        recognition.onend = () => {
+          setRecording(false)
+        }
+
+        try {
+          recognition.start()
+        } catch (error) {
+          console.error('Error starting speech recognition:', error)
+          setRecording(false)
+        }
+      } else {
+        // Fallback to audio recording if speech recognition not supported
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+          const mediaRecorder = new MediaRecorder(stream)
+          mediaRecorderRef.current = mediaRecorder
+          const chunks: Blob[] = []
+
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+              chunks.push(e.data)
+            }
           }
+
+          mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(chunks, { type: 'audio/webm' })
+            stream.getTracks().forEach(track => track.stop())
+
+            // Convert to file and send for analysis
+            const audioFile = new File([audioBlob], 'voice-recording.webm', { type: 'audio/webm' })
+
+            // For now, just indicate voice was recorded
+            setInputMessage('Voice message recorded - transcription would happen here')
+          }
+
+          mediaRecorder.start()
+          setRecording(true)
+        } catch (error) {
+          console.error('Error accessing microphone:', error)
         }
-
-        mediaRecorder.onstop = async () => {
-          const audioBlob = new Blob(chunks, { type: 'audio/webm' })
-          stream.getTracks().forEach(track => track.stop())
-
-          // Convert to file and send for analysis
-          const audioFile = new File([audioBlob], 'voice-recording.webm', { type: 'audio/webm' })
-
-          // For now, just indicate voice was recorded
-          setInputMessage('Voice message recorded - transcription would happen here')
-        }
-
-        mediaRecorder.start()
-        setRecording(true)
-      } catch (error) {
-        console.error('Error accessing microphone:', error)
       }
     } else {
-      mediaRecorderRef.current?.stop()
+      // Stop recording
       setRecording(false)
+      mediaRecorderRef.current?.stop()
     }
   }
 
