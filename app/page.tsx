@@ -20,7 +20,11 @@ import {
   FiFilter,
   FiGift,
   FiFileText,
-  FiMessageSquare
+  FiMessageSquare,
+  FiAlertOctagon,
+  FiCamera,
+  FiTrendingUp,
+  FiDollarSign
 } from 'react-icons/fi'
 
 // Agent IDs
@@ -74,6 +78,8 @@ interface Message {
   timestamp: Date
   agentResponse?: PhishDetectorResult | DocumentAnalyzerResult | BenefitsNavigatorResult
   responseType?: 'phish' | 'document' | 'benefits' | 'general'
+  alertType?: 'SCAM_ALERT' | 'WARNING' | 'SAFE' | 'OPPORTUNITY' | 'INFO'
+  severity?: 'RED' | 'YELLOW' | 'GREEN' | 'BLUE'
 }
 
 interface HistoryItem {
@@ -101,13 +107,31 @@ export default function Home() {
   const [historyFilter, setHistoryFilter] = useState<'all' | 'scams' | 'benefits'>('all')
   const [uploadingFile, setUploadingFile] = useState(false)
   const [recording, setRecording] = useState(false)
+  const [panicMode, setPanicMode] = useState(false)
+  const [showRedAlert, setShowRedAlert] = useState(false)
+  const [showLoanCalculator, setShowLoanCalculator] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
+
+  // Vibrate and flash red screen on scam alert
+  useEffect(() => {
+    if (showRedAlert) {
+      // Trigger vibration if supported
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200, 100, 200])
+      }
+      // Auto-hide after 3 seconds
+      const timeout = setTimeout(() => setShowRedAlert(false), 3000)
+      return () => clearTimeout(timeout)
+    }
+  }, [showRedAlert])
 
   const determineResponseType = (result: any): 'phish' | 'document' | 'benefits' | 'general' => {
     if (result.risk_level && result.threat_type) return 'phish'
@@ -116,13 +140,14 @@ export default function Home() {
     return 'general'
   }
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || loading) return
+  const handleSendMessage = async (customMessage?: string) => {
+    const messageToSend = customMessage || inputMessage
+    if (!messageToSend.trim() || loading) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputMessage,
+      content: messageToSend,
       timestamp: new Date(),
     }
 
@@ -132,11 +157,37 @@ export default function Home() {
 
     try {
       // Call the Guardian Coordinator (Manager agent)
-      const response = await callAIAgent(inputMessage, AGENTS.COORDINATOR)
+      const response = await callAIAgent(messageToSend, AGENTS.COORDINATOR)
 
       if (response.success && response.response.result) {
         const result = response.response.result
         const responseType = determineResponseType(result)
+
+        // Parse alert type from response content
+        let alertType: Message['alertType'] = 'INFO'
+        let severity: Message['severity'] = 'BLUE'
+
+        if (result.alert_type) {
+          alertType = result.alert_type
+          severity = result.severity
+        } else if (result.risk_level === 'Red') {
+          alertType = 'SCAM_ALERT'
+          severity = 'RED'
+        } else if (result.risk_level === 'Yellow') {
+          alertType = 'WARNING'
+          severity = 'YELLOW'
+        } else if (result.risk_level === 'Green') {
+          alertType = 'SAFE'
+          severity = 'GREEN'
+        } else if (responseType === 'benefits') {
+          alertType = 'OPPORTUNITY'
+          severity = 'GREEN'
+        }
+
+        // Trigger red alert screen for scam detection
+        if (alertType === 'SCAM_ALERT' && severity === 'RED') {
+          setShowRedAlert(true)
+        }
 
         const agentMessage: Message = {
           id: (Date.now() + 1).toString(),
@@ -145,6 +196,8 @@ export default function Home() {
           timestamp: new Date(),
           agentResponse: result,
           responseType,
+          alertType,
+          severity,
         }
 
         setMessages(prev => [...prev, agentMessage])
@@ -153,7 +206,7 @@ export default function Home() {
         const historyItem: HistoryItem = {
           id: agentMessage.id,
           date: new Date(),
-          snippet: inputMessage.substring(0, 50) + (inputMessage.length > 50 ? '...' : ''),
+          snippet: messageToSend.substring(0, 50) + (messageToSend.length > 50 ? '...' : ''),
           verdict: result.risk_level === 'Red' ? 'danger' :
                    result.risk_level === 'Yellow' ? 'caution' :
                    result.risk_level === 'Green' ? 'safe' :
@@ -182,6 +235,7 @@ export default function Home() {
       setMessages(prev => [...prev, errorMessage])
     } finally {
       setLoading(false)
+      setPanicMode(false)
     }
   }
 
@@ -274,12 +328,127 @@ export default function Home() {
     }
   }
 
-  const handleVoiceRecord = () => {
-    setRecording(!recording)
-    // Voice recording would be implemented with MediaRecorder API
-    // For now, this is a placeholder
+  const handleVoiceRecord = async () => {
     if (!recording) {
-      setTimeout(() => setRecording(false), 3000)
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+        const mediaRecorder = new MediaRecorder(stream)
+        mediaRecorderRef.current = mediaRecorder
+        const chunks: Blob[] = []
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            chunks.push(e.data)
+          }
+        }
+
+        mediaRecorder.onstop = async () => {
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' })
+          stream.getTracks().forEach(track => track.stop())
+
+          // Convert to file and send for analysis
+          const audioFile = new File([audioBlob], 'voice-recording.webm', { type: 'audio/webm' })
+
+          // For now, just indicate voice was recorded
+          setInputMessage('Voice message recorded - transcription would happen here')
+        }
+
+        mediaRecorder.start()
+        setRecording(true)
+      } catch (error) {
+        console.error('Error accessing microphone:', error)
+      }
+    } else {
+      mediaRecorderRef.current?.stop()
+      setRecording(false)
+    }
+  }
+
+  const handlePanicButton = async () => {
+    setPanicMode(true)
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      const chunks: Blob[] = []
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data)
+        }
+      }
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' })
+        stream.getTracks().forEach(track => track.stop())
+
+        // Emergency report
+        await handleSendMessage('EMERGENCY: I am being pressured by someone about a loan or financial matter. This is a panic button report.')
+        setPanicMode(false)
+      }
+
+      mediaRecorder.start()
+
+      // Auto-stop after 10 seconds
+      setTimeout(() => {
+        if (mediaRecorderRef.current?.state === 'recording') {
+          mediaRecorderRef.current.stop()
+        }
+      }, 10000)
+    } catch (error) {
+      console.error('Panic button error:', error)
+      await handleSendMessage('EMERGENCY: I need help with a suspicious financial situation.')
+      setPanicMode(false)
+    }
+  }
+
+  const handleCameraUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    setUploadingFile(true)
+
+    try {
+      const uploadResult = await uploadFiles(file)
+
+      if (uploadResult.success && uploadResult.asset_ids.length > 0) {
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          role: 'user',
+          content: `Screenshot uploaded: ${file.name}`,
+          timestamp: new Date(),
+        }
+        setMessages(prev => [...prev, userMessage])
+
+        // Send to Document Analyzer for loan transparency check
+        const response = await callAIAgent(
+          `Please analyze this loan app screenshot and calculate the true cost with all hidden fees.`,
+          AGENTS.DOCUMENT_ANALYZER,
+          { assets: uploadResult.asset_ids }
+        )
+
+        if (response.success && response.response.result) {
+          const result = response.response.result
+          const agentMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'agent',
+            content: result.explanation || 'Screenshot analyzed',
+            timestamp: new Date(),
+            agentResponse: result,
+            responseType: 'document',
+          }
+          setMessages(prev => [...prev, agentMessage])
+        }
+      }
+    } catch (error) {
+      console.error('Error uploading screenshot')
+    } finally {
+      setUploadingFile(false)
+      if (cameraInputRef.current) {
+        cameraInputRef.current.value = ''
+      }
     }
   }
 
@@ -291,7 +460,93 @@ export default function Home() {
   })
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-amber-50 via-cream-50 to-green-50">
+    <div className="flex h-screen bg-gradient-to-br from-amber-50 via-cream-50 to-green-50 relative">
+      {/* Red Alert Overlay */}
+      {showRedAlert && (
+        <div className="fixed inset-0 z-[100] bg-red-600 bg-opacity-95 flex items-center justify-center animate-pulse">
+          <div className="text-center text-white p-8">
+            <FiAlertOctagon size={120} className="mx-auto mb-6 animate-bounce" />
+            <h1 className="text-6xl font-bold mb-4">SCAM DETECTED</h1>
+            <p className="text-3xl">Do not proceed! This is a trap!</p>
+          </div>
+        </div>
+      )}
+
+      {/* Loan Transparency Calculator Modal */}
+      {showLoanCalculator && (
+        <div className="fixed inset-0 z-[90] bg-black bg-opacity-50 flex items-center justify-center" onClick={() => setShowLoanCalculator(false)}>
+          <div className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <FiDollarSign size={32} className="text-purple-600" />
+                <h2 className="text-3xl font-bold text-gray-800">Loan Transparency Calculator</h2>
+              </div>
+              <button onClick={() => setShowLoanCalculator(false)} className="text-gray-500 hover:text-gray-700">
+                <FiX size={28} />
+              </button>
+            </div>
+
+            <p className="text-xl text-gray-600 mb-6">
+              Upload a screenshot of a loan app or offer to see the true cost with all hidden fees exposed.
+            </p>
+
+            <div className="space-y-4">
+              <button
+                onClick={() => cameraInputRef.current?.click()}
+                className="w-full flex items-center justify-center gap-3 px-6 py-6 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors text-xl font-semibold"
+              >
+                <FiCamera size={28} />
+                Take Screenshot or Upload Image
+              </button>
+
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleCameraUpload}
+                className="hidden"
+              />
+
+              <div className="bg-purple-50 p-6 rounded-xl border-2 border-purple-200">
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <FiTrendingUp className="text-purple-600" />
+                  What we analyze:
+                </h3>
+                <ul className="space-y-2 text-lg text-gray-700">
+                  <li>• Stated vs. Effective Interest Rate</li>
+                  <li>• Hidden processing fees and charges</li>
+                  <li>• Compliance with RBI guidelines</li>
+                  <li>• True cost visualization</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Panic Button FAB */}
+      <button
+        onClick={handlePanicButton}
+        disabled={panicMode}
+        className={`fixed bottom-8 right-8 z-50 w-20 h-20 rounded-full shadow-2xl flex items-center justify-center transition-all ${
+          panicMode
+            ? 'bg-red-700 animate-pulse scale-110'
+            : 'bg-red-600 hover:bg-red-700 hover:scale-110'
+        }`}
+        title="Panic Button - Report emergency"
+      >
+        <FiAlertOctagon size={40} className="text-white" />
+      </button>
+
+      {panicMode && (
+        <div className="fixed bottom-32 right-8 z-50 bg-white p-4 rounded-xl shadow-xl border-2 border-red-600">
+          <p className="text-lg font-semibold text-red-600 flex items-center gap-2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600" />
+            Recording emergency report...
+          </p>
+        </div>
+      )}
       {/* History Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-2xl transform transition-transform duration-300 ${
@@ -415,25 +670,50 @@ export default function Home() {
                   Protecting you from scams and helping you discover benefits
                 </p>
 
+                {/* Large Microphone - Dialect First Interface */}
+                <div className="mb-8">
+                  <button
+                    onClick={handleVoiceRecord}
+                    className={`mx-auto w-32 h-32 rounded-full shadow-2xl flex items-center justify-center transition-all ${
+                      recording
+                        ? 'bg-red-600 text-white animate-pulse scale-110'
+                        : 'bg-green-600 text-white hover:bg-green-700 hover:scale-110'
+                    }`}
+                    title="Tap to speak in your language"
+                  >
+                    <FiMic size={64} />
+                  </button>
+                  <p className="mt-4 text-xl font-semibold text-gray-700">
+                    {recording ? 'Listening...' : 'Tap to speak in your language'}
+                  </p>
+                </div>
+
                 {/* Quick Action Chips */}
                 <div className="flex flex-wrap gap-3 justify-center">
                   <button
                     onClick={() => handleQuickAction('sms')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-green-600 text-green-700 rounded-full hover:bg-green-50 transition-colors text-lg font-medium"
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-green-600 text-green-700 rounded-full hover:bg-green-50 transition-colors text-lg font-medium shadow-md"
                   >
                     <FiMessageSquare size={20} />
                     Check SMS
                   </button>
                   <button
                     onClick={() => handleQuickAction('benefits')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-600 text-blue-700 rounded-full hover:bg-blue-50 transition-colors text-lg font-medium"
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-600 text-blue-700 rounded-full hover:bg-blue-50 transition-colors text-lg font-medium shadow-md"
                   >
                     <FiGift size={20} />
                     Find Benefits
                   </button>
                   <button
+                    onClick={() => setShowLoanCalculator(true)}
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-purple-600 text-purple-700 rounded-full hover:bg-purple-50 transition-colors text-lg font-medium shadow-md"
+                  >
+                    <FiDollarSign size={20} />
+                    Loan Calculator
+                  </button>
+                  <button
                     onClick={() => handleQuickAction('document')}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-purple-600 text-purple-700 rounded-full hover:bg-purple-50 transition-colors text-lg font-medium"
+                    className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-orange-600 text-orange-700 rounded-full hover:bg-orange-50 transition-colors text-lg font-medium shadow-md"
                   >
                     <FiFileText size={20} />
                     Upload Document
@@ -696,6 +976,26 @@ function VerdictCard({
               <div className="bg-white bg-opacity-70 p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Effective Interest Rate</p>
                 <p className="text-2xl font-bold text-red-600">{docResponse.effective_interest_rate}</p>
+              </div>
+            </div>
+
+            {/* Hidden Cost Progress Bar */}
+            <div className="bg-white bg-opacity-70 p-4 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-semibold text-gray-700">Hidden Cost Breakdown</p>
+                <FiTrendingUp className="text-red-600" size={20} />
+              </div>
+              <div className="relative h-8 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="absolute h-full bg-gradient-to-r from-red-500 to-red-700 transition-all duration-1000 flex items-center justify-end px-3"
+                  style={{ width: '75%' }}
+                >
+                  <span className="text-white text-xs font-bold">True Cost Much Higher</span>
+                </div>
+              </div>
+              <div className="flex justify-between mt-2 text-xs text-gray-600">
+                <span>What they show</span>
+                <span>What you actually pay</span>
               </div>
             </div>
 

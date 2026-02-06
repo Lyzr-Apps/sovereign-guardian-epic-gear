@@ -7,10 +7,10 @@
     {
       "id": "guardian_coordinator",
       "agent_id": "69857fdbf5dba64760ed7ec0",
-      "name": "Guardian Coordinator",
+      "name": "Guardian Central Command",
       "type": "manager",
-      "role": "Financial Safety Coordinator",
-      "description": "Classifies user intent, routes to specialized sub-agents, and synthesizes responses into Red/Yellow/Green safety verdicts",
+      "role": "Guardian Central Command - Financial Safety Coordinator and Manager",
+      "description": "Guardian Central Command (GCC) for financial inclusion - manages specialized sub-agents for document analysis, benefit matching, and scam detection with production-ready triage and response formatting",
       "provider": "OpenAI",
       "model": "gpt-4o",
       "temperature": 0.3,
@@ -20,7 +20,14 @@
         "69857fadb90162af337b1db1",
         "69857fc5a051b79c1135a033"
       ],
-      "response_schema": "response_schemas/guardian_coordinator_response.json"
+      "response_schema": "response_schemas/guardian_coordinator_response.json",
+      "features": {
+        "input_triage": true,
+        "context_persistence": true,
+        "ui_semantic_tags": true,
+        "knowledge_base_verification": true,
+        "multi_language_support": true
+      }
     },
     {
       "id": "phish_detector",
@@ -99,7 +106,7 @@
       {
         "id": "guardian_coordinator",
         "type": "Agent",
-        "label": "Guardian Coordinator",
+        "label": "Guardian Central Command",
         "nodeCategory": "agent",
         "agent_id": "69857fdbf5dba64760ed7ec0"
       },

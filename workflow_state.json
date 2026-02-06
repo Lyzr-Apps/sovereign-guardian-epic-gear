@@ -4,15 +4,22 @@
   "agents": {
     "guardian_coordinator": {
       "agent_id": "69857fdbf5dba64760ed7ec0",
-      "name": "Guardian Coordinator",
+      "name": "Guardian Central Command",
       "type": "manager",
-      "role": "Financial Safety Coordinator",
+      "role": "Guardian Central Command - Financial Safety Coordinator and Manager",
       "model": "gpt-4o",
       "managed_agents": [
         "69857f9a0ee88347863f06f1",
         "69857fadb90162af337b1db1",
         "69857fc5a051b79c1135a033"
-      ]
+      ],
+      "features": {
+        "input_triage": true,
+        "context_persistence": true,
+        "ui_semantic_tags": true,
+        "knowledge_base_verification": true,
+        "multi_language_support": true
+      }
     },
     "phish_detector": {
       "agent_id": "69857f9a0ee88347863f06f1",

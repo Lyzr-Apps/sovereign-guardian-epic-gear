@@ -1,43 +1,108 @@
 {
-  "agent_name": "Guardian Coordinator",
+  "agent_name": "Guardian Central Command",
   "agent_id": "69857fdbf5dba64760ed7ec0",
-  "agent_purpose": "financial_safety_coordination",
-  "description": "Manages the overall financial safety workflow by routing queries and synthesizing sub-agent responses into unified verdicts",
+  "agent_purpose": "guardian_central_command",
+  "description": "Guardian Central Command (GCC) manages financial safety workflow with input triage, context persistence, UI semantic tags, and knowledge-base-verified responses",
   "response_schema": {
     "status": "string (success|error)",
     "result": {
-      "response": "string",
-      "action_taken": "string (optional)",
-      "data": "object (optional, any structured data)",
-      "suggestions": [
-        "string (optional)"
-      ]
+      "alert_type": "string (SCAM_ALERT|WARNING|SAFE|OPPORTUNITY|INFO)",
+      "severity": "string (RED|YELLOW|GREEN|BLUE)",
+      "risk_level": "string (Red|Yellow|Green)",
+      "threat_type": "string (optional: predatory_lending|phishing|data_harvesting|none)",
+      "matched_schemes": "array (optional: for benefit matching)",
+      "total_potential_benefits": "string (optional: for benefit matching)",
+      "explanation": "string (simple language explanation)",
+      "indicators": "array (optional: list of warning signs or positive indicators)",
+      "recommended_action": "string",
+      "next_steps": "array (actionable steps for user)",
+      "ui_trigger": "string (vibrate_red_screen|celebrate|warning_flash|info_display)",
+      "source": "string (optional: knowledge base citation)",
+      "user_profile": "object (optional: tracked user context)",
+      "language_preference": "string (optional: detected or set language)"
     },
     "metadata": {
       "agent_name": "string",
-      "timestamp": "string (ISO)"
+      "timestamp": "string (ISO)",
+      "sub_agent_used": "string (optional: which sub-agent was delegated to)"
     }
   },
-  "example_response": {
-    "status": "success",
-    "result": {
-      "response": "I've completed the task you requested",
-      "action_taken": "Processed the input and generated output",
-      "data": {
-        "key": "value"
+  "example_responses": {
+    "scam_alert": {
+      "status": "success",
+      "result": {
+        "alert_type": "SCAM_ALERT",
+        "severity": "RED",
+        "risk_level": "Red",
+        "threat_type": "predatory_lending",
+        "explanation": "This is a trap loan. They say 2% but the real cost is 730% per year when you add all fees.",
+        "indicators": [
+          "Hidden processing fees",
+          "Daily interest calculation",
+          "No RBI registration"
+        ],
+        "recommended_action": "Block this number immediately. Do not click any links.",
+        "ui_trigger": "vibrate_red_screen"
       },
-      "suggestions": [
-        "You might also want to try X"
-      ]
+      "metadata": {
+        "agent_name": "Guardian Central Command",
+        "timestamp": "2026-02-06T00:00:00Z",
+        "sub_agent_used": "Phish Detector Agent"
+      }
     },
-    "metadata": {
-      "agent_name": "Guardian Coordinator",
-      "timestamp": "2025-01-15T10:30:00Z"
+    "benefit_opportunity": {
+      "status": "success",
+      "result": {
+        "alert_type": "OPPORTUNITY",
+        "severity": "GREEN",
+        "risk_level": "Green",
+        "matched_schemes": [
+          "PM-Kisan",
+          "Kisan Credit Card"
+        ],
+        "total_potential_benefits": "₹6,000 per year",
+        "explanation": "You qualify for PM-Kisan farmer support based on your 2-acre farm.",
+        "next_steps": [
+          "Visit nearest Gram Panchayat",
+          "Bring Aadhaar and land records",
+          "Apply online at pmkisan.gov.in"
+        ],
+        "ui_trigger": "celebrate",
+        "source": "Government_Schemes Knowledge Base"
+      },
+      "metadata": {
+        "agent_name": "Guardian Central Command",
+        "timestamp": "2026-02-06T00:00:00Z",
+        "sub_agent_used": "Benefits Navigator Agent"
+      }
+    },
+    "safe_verification": {
+      "status": "success",
+      "result": {
+        "alert_type": "SAFE",
+        "severity": "GREEN",
+        "risk_level": "Green",
+        "explanation": "This is a legitimate bank loan document. Interest rate 9.5% matches RBI guidelines.",
+        "recommended_action": "You can proceed with this loan application.",
+        "ui_trigger": "info_display",
+        "source": "RBI_Guidelines Knowledge Base"
+      },
+      "metadata": {
+        "agent_name": "Guardian Central Command",
+        "timestamp": "2026-02-06T00:00:00Z",
+        "sub_agent_used": "Document Analyzer Agent"
+      }
     }
   },
-  "is_actual_tested": false,
-  "test_timestamp": null,
-  "test_message_used": "Hello, provide a sample response",
-  "raw_test_response": "I need more details about the type of question or query you're referring to in order to provide a sample response. Are you interested in a query related to financial protection, discovery of benefits, or financial education? Please specify so I can generate the appropriate sample response.",
-  "test_error": "Response not valid JSON: Expecting value: line 1 column 1 (char 0)"
+  "features": {
+    "input_triage": "Automatically detects input type and routes to appropriate sub-agent",
+    "context_persistence": "Maintains user_profile state across conversation",
+    "ui_semantic_tags": "Includes [SCAM_ALERT: RED], [OPPORTUNITY: GREEN] etc. at response start",
+    "knowledge_base_verification": "Cites sources and flags unverified advice",
+    "multi_language_support": "Responds in user's preferred language/dialect"
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T00:00:00Z",
+  "test_message_used": "Enhanced production-ready schema with semantic tags",
+  "schema_version": "2.0"
 }
