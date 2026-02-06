@@ -33,6 +33,7 @@ import { ShadowBalanceGauge } from '@/components/ShadowBalanceGauge'
 import { EARCalculationDisplay } from '@/components/EARCalculationDisplay'
 import { BenefitTrackerStepper } from '@/components/BenefitTrackerStepper'
 import { MagicWandForm } from '@/components/MagicWandForm'
+import { VigilanteShield } from '@/components/VigilanteShield'
 import { ShadowBalance, RecurringBill, UserFinancialProfile, EARCalculation, BenefitClaimStatus, PrefilledFormData } from '@/types/advanced-features'
 
 // Agent IDs
@@ -182,6 +183,34 @@ export default function Home() {
     }
   ])
   const [showBenefitTracker, setShowBenefitTracker] = useState(false)
+
+  // User Profile - demo data (would come from agent in production)
+  const [userProfile] = useState<Partial<UserFinancialProfile>>({
+    userId: 'demo-user-001',
+    location: 'Maharashtra, India',
+    income: 180000, // Annual income in INR
+    occupation: 'Farmer',
+    languagePreference: 'en',
+    bankBalance: 15000
+  })
+
+  // Vigilante Shield state
+  const [vigilanteActive, setVigilanteActive] = useState(true)
+  const [vigilanteThreats, setVigilanteThreats] = useState<number>(2)
+  const [recentThreats] = useState([
+    {
+      id: '1',
+      source: 'SMS from +91-XXXXX123',
+      message: 'URGENT: Your bank account will be blocked. Click link to verify: bit.ly/scam123',
+      detectedAt: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
+    },
+    {
+      id: '2',
+      source: 'WhatsApp from Unknown',
+      message: 'Get instant loan ₹50,000 in 5 minutes! 0% interest for first month. Apply now!',
+      detectedAt: new Date(Date.now() - 30 * 60 * 1000) // 30 minutes ago
+    }
+  ])
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -558,6 +587,14 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-amber-50 via-cream-50 to-green-50 relative">
+      {/* Vigilante Shield */}
+      <VigilanteShield
+        isActive={vigilanteActive}
+        threatsDetected={vigilanteThreats}
+        onToggle={() => setVigilanteActive(!vigilanteActive)}
+        recentThreats={recentThreats}
+      />
+
       {/* Red Alert Overlay */}
       {showRedAlert && (
         <div className="fixed inset-0 z-[100] bg-red-600 bg-opacity-95 flex items-center justify-center animate-pulse">
@@ -762,27 +799,89 @@ export default function Home() {
             {messages.length === 0 ? (
               <div className="text-center py-12">
                 <FiShield size={64} className="mx-auto mb-6 text-green-700 opacity-50" />
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">Welcome to Your Financial Guardian</h2>
+                <h2 className="text-3xl font-bold text-gray-800 mb-3">
+                  {selectedLanguage === 'hi' ? 'आपके वित्तीय संरक्षक में आपका स्वागत है' :
+                   selectedLanguage === 'mr' ? 'तुमच्या आर्थिक संरक्षकाकडे स्वागत आहे' :
+                   selectedLanguage === 'es' ? 'Bienvenido a su Guardián Financiero' :
+                   'Welcome to Your Financial Guardian'}
+                </h2>
                 <p className="text-xl text-gray-600 mb-8">
-                  Protecting you from scams and helping you discover benefits
+                  {selectedLanguage === 'hi' ? 'घोटालों से आपकी रक्षा और लाभ खोजने में मदद' :
+                   selectedLanguage === 'mr' ? 'घोटाळ्यांपासून संरक्षण आणि फायदे शोधण्यास मदत' :
+                   selectedLanguage === 'es' ? 'Protegiéndote de estafas y ayudándote a descubrir beneficios' :
+                   'Protecting you from scams and helping you discover benefits'}
                 </p>
 
                 {/* Large Microphone - Dialect First Interface */}
-                <div className="mb-8">
-                  <button
-                    onClick={handleVoiceRecord}
-                    className={`mx-auto w-32 h-32 rounded-full shadow-2xl flex items-center justify-center transition-all ${
-                      recording
-                        ? 'bg-red-600 text-white animate-pulse scale-110'
-                        : 'bg-green-600 text-white hover:bg-green-700 hover:scale-110'
-                    }`}
-                    title="Tap to speak in your language"
-                  >
-                    <FiMic size={64} />
-                  </button>
-                  <p className="mt-4 text-xl font-semibold text-gray-700">
-                    {recording ? 'Listening...' : 'Tap to speak in your language'}
-                  </p>
+                <div className="mb-10">
+                  {/* Language Indicator Badges */}
+                  <div className="flex justify-center gap-3 mb-6">
+                    {languages.map(lang => (
+                      <button
+                        key={lang.code}
+                        onClick={() => setSelectedLanguage(lang.code)}
+                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all cursor-pointer hover:scale-105 ${
+                          selectedLanguage === lang.code
+                            ? 'bg-green-600 text-white shadow-lg scale-105'
+                            : 'bg-white text-gray-600 border-2 border-gray-300 hover:border-green-400'
+                        }`}
+                      >
+                        {lang.name}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Center-Stage Microphone Button */}
+                  <div className="relative inline-flex">
+                    {/* Animated ring indicator */}
+                    {recording && (
+                      <>
+                        <span className="absolute inset-0 w-48 h-48 rounded-full bg-red-400 opacity-75 animate-ping"></span>
+                        <span className="absolute inset-0 w-48 h-48 rounded-full bg-red-400 opacity-50 animate-pulse"></span>
+                      </>
+                    )}
+                    <button
+                      onClick={handleVoiceRecord}
+                      className={`relative mx-auto w-48 h-48 rounded-full shadow-2xl flex items-center justify-center transition-all transform ${
+                        recording
+                          ? 'bg-red-600 text-white scale-110 ring-8 ring-red-300'
+                          : 'bg-gradient-to-br from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:scale-110 hover:shadow-3xl ring-4 ring-green-300 ring-opacity-50'
+                      }`}
+                      title="Tap to speak in your language"
+                    >
+                      <FiMic size={96} />
+                    </button>
+                  </div>
+
+                  {/* Instruction Text */}
+                  <div className="mt-6 text-center">
+                    <p className="text-2xl font-bold text-gray-800 mb-2">
+                      {recording ? (
+                        selectedLanguage === 'hi' ? 'सुन रहे हैं...' :
+                        selectedLanguage === 'mr' ? 'ऐकत आहे...' :
+                        selectedLanguage === 'es' ? 'Escuchando...' :
+                        'Listening...'
+                      ) : (
+                        selectedLanguage === 'hi' ? 'अपनी भाषा में बोलें' :
+                        selectedLanguage === 'mr' ? 'तुमच्या भाषेत बोला' :
+                        selectedLanguage === 'es' ? 'Habla en tu idioma' :
+                        'Speak in Your Language'
+                      )}
+                    </p>
+                    <p className="text-base text-gray-600">
+                      {recording ? (
+                        selectedLanguage === 'hi' ? 'आपकी बात सुन रहे हैं...' :
+                        selectedLanguage === 'mr' ? 'तुमचं बोलणं ऐकत आहे...' :
+                        selectedLanguage === 'es' ? 'Te estamos escuchando...' :
+                        'We are listening to you...'
+                      ) : (
+                        selectedLanguage === 'hi' ? 'माइक्रोफोन पर टैप करें और बोलना शुरू करें' :
+                        selectedLanguage === 'mr' ? 'मायक्रोफोनवर टॅप करा आणि बोलणे सुरू करा' :
+                        selectedLanguage === 'es' ? 'Toca el micrófono y empieza a hablar' :
+                        'Tap the microphone and start speaking'
+                      )}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Quick Action Chips */}
@@ -829,6 +928,80 @@ export default function Home() {
                     <FiAward size={20} />
                     Track Applications
                   </button>
+                </div>
+
+                {/* Voice Command Examples */}
+                <div className="mt-8 max-w-2xl mx-auto bg-blue-50 p-6 rounded-xl border-2 border-blue-200">
+                  <h3 className="text-lg font-semibold text-blue-900 mb-4 text-center flex items-center justify-center gap-2">
+                    <FiMic className="text-blue-600" size={20} />
+                    {selectedLanguage === 'hi' ? 'उदाहरण वॉयस कमांड' :
+                     selectedLanguage === 'mr' ? 'उदाहरण व्हॉइस कमांड' :
+                     selectedLanguage === 'es' ? 'Comandos de voz de ejemplo' :
+                     'Example Voice Commands'}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {selectedLanguage === 'hi' ? (
+                      <>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"मुझे एक SMS मिला है..."</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"मुझे कौन से लाभ मिल सकते हैं?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"यह लोन सुरक्षित है?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"मेरा बैलेंस क्या है?"</span>
+                        </div>
+                      </>
+                    ) : selectedLanguage === 'mr' ? (
+                      <>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"मला एक SMS आला आहे..."</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"मला कोणते फायदे मिळू शकतात?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"हे कर्ज सुरक्षित आहे का?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"माझे बॅलन्स काय आहे?"</span>
+                        </div>
+                      </>
+                    ) : selectedLanguage === 'es' ? (
+                      <>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"Recibí un SMS..."</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"¿Qué beneficios puedo obtener?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"¿Este préstamo es seguro?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"¿Cuál es mi saldo?"</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"I received an SMS..."</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"What benefits can I get?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"Is this loan safe?"</span>
+                        </div>
+                        <div className="bg-white p-3 rounded-lg text-sm">
+                          <span className="font-semibold text-gray-800">"What's my balance?"</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
 
                 {/* Shadow Balance Widget */}
@@ -986,7 +1159,7 @@ function ChatMessage({ message }: { message: Message }) {
     <div className="flex justify-start">
       <div className="max-w-3xl w-full">
         {message.agentResponse && message.responseType !== 'general' ? (
-          <VerdictCard response={message.agentResponse} responseType={message.responseType!} />
+          <VerdictCard response={message.agentResponse} responseType={message.responseType!} userProfile={userProfile} />
         ) : (
           <div className="bg-white px-6 py-4 rounded-2xl rounded-tl-sm shadow-md border border-gray-200">
             <p className="text-lg leading-relaxed text-gray-800">{message.content}</p>
@@ -1003,10 +1176,12 @@ function ChatMessage({ message }: { message: Message }) {
 // Verdict Card Component
 function VerdictCard({
   response,
-  responseType
+  responseType,
+  userProfile
 }: {
   response: PhishDetectorResult | DocumentAnalyzerResult | BenefitsNavigatorResult
   responseType: 'phish' | 'document' | 'benefits' | 'general'
+  userProfile?: Partial<UserFinancialProfile>
 }) {
   const [expanded, setExpanded] = useState(true)
 
@@ -1204,6 +1379,17 @@ function VerdictCard({
     // If claim status tracking is provided, show the Benefit Tracker instead
     if (benefitsResponse.claim_status) {
       return <BenefitTrackerStepper claimStatus={benefitsResponse.claim_status} />
+    }
+
+    // If pre-filled form is provided, show Magic Wand Form
+    if (benefitsResponse.prefilled_form) {
+      return <MagicWandForm
+        formData={benefitsResponse.prefilled_form}
+        userProfile={userProfile}
+        onSubmit={(data) => {
+          console.log('Submitting benefit application:', data)
+        }}
+      />
     }
 
     return (
